@@ -1,7 +1,9 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
+
 import './App.css'
+import * as React from 'react';
+import Drawer from './Drawer'
+
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -25,16 +27,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-function App() {
-  const [count, setCount] = useState(0)
-
+function App(){
   return (
-    <>
-      <div>
-        <h1>Server Buddy</h1>
-      </div>
-    </>
+    <Drawer />
   )
-}
+};
 
-export default App
+export default App;
