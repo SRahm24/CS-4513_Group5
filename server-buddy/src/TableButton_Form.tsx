@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
@@ -11,7 +10,47 @@ import DialogTitle from '@mui/material/DialogTitle';
 import React from 'react';
 import TextField from '@mui/material/TextField';
 import { CardActions } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
+function ccyFormat(num: number) {
+    return `${num.toFixed(2)}`;
+}
+
+function createData(
+    item: string,
+    type: string,
+    quantity: number,
+    price: number
+  ) {
+    return { item, type, quantity, price };
+}
+  
+const rows = [
+    createData('Fried Mozzarella', "Appetizer", 1, 7.99),
+    createData('Pep Slice', "Entree", 2, 9.98),
+    createData('Coke', "Drink", 1, 1.99),
+    createData('Lava Cake', "Dessert", 1, 4.99),
+];
+
+interface Row {
+    item: string;
+    type: string;
+    quantity: number;
+    price: number;
+  }
+
+function subtotal(items: readonly Row[]) {
+    return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
+}
+
+const Subtotal = subtotal(rows);
+  
 
 function TableCard(tableIndex:number){
     
@@ -107,18 +146,53 @@ function TableCard(tableIndex:number){
             >     
                 <DialogTitle>View Orders</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        This will where you can view the table's orders
-                    </DialogContentText>
+                    {table()}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseView}>Close</Button>
                     </DialogActions>
             </Dialog>
     </Card>
-
     
   );
 }
+
+function table(){
+    return(
+        <TableContainer component={Paper}>
+      <Table sx={{}} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell >Item</TableCell>
+            <TableCell align="right">Type</TableCell>
+            <TableCell align="right">Quantity&nbsp;</TableCell>
+            <TableCell align="right">Price&nbsp;</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow
+              key={row.item}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+              <TableCell component="th" scope="row">
+                {row.item}
+              </TableCell>
+              <TableCell align="right">{row.type}</TableCell>
+              <TableCell align="right">{row.quantity}</TableCell>
+              <TableCell align="right">{row.price}</TableCell>
+            </TableRow>
+          ))}
+          <TableRow>
+            <TableCell rowSpan={3} />
+            <TableCell colSpan={2} align="right">Subtotal</TableCell>
+            <TableCell align="right">{ccyFormat(Subtotal)}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
+    )
+}
+
 
 export default TableCard;
