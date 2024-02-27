@@ -19,6 +19,11 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import TableLayout from './TableLayout';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { TabsList } from '@mui/base/TabsList';
+import { TabPanel } from '@mui/base/TabPanel';
+import Container from '@mui/material/Container';
 
 const drawerWidth = 240;
 
@@ -71,6 +76,39 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
 export default function PersistentDrawerLeft() {
   const theme = createTheme({
     palette: {
@@ -85,6 +123,12 @@ export default function PersistentDrawerLeft() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
   };
 
   return (
@@ -154,7 +198,24 @@ export default function PersistentDrawerLeft() {
       </Drawer>
       <Main open={open}>
 
-        <TableLayout />
+        <React.Fragment>
+          <CssBaseline />
+          <Container maxWidth={false} disableGutters={true}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tab label="Table View" {...a11yProps(0)} />
+                <Tab label="To-Go Orders" {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+            <CustomTabPanel value={value} index={0}>
+              <TableLayout/>
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
+              To-Go
+            </CustomTabPanel>
+          </Container>
+        </React.Fragment>
+
         
       </Main>
     </Box>
