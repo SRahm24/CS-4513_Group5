@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ThemeProvider, createTheme, styled, useTheme } from '@mui/material/styles';
+import { ThemeProvider, createTheme, styled} from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -21,9 +21,8 @@ import MailIcon from '@mui/icons-material/Mail';
 import TableLayout from './TableLayout';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { TabsList } from '@mui/base/TabsList';
-import { TabPanel } from '@mui/base/TabPanel';
 import Container from '@mui/material/Container';
+import ToGo from './ToGo';
 
 const drawerWidth = 240;
 
@@ -127,7 +126,7 @@ export default function PersistentDrawerLeft() {
 
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -198,9 +197,8 @@ export default function PersistentDrawerLeft() {
       </Drawer>
       <Main open={open}>
 
-        <React.Fragment>
           <CssBaseline />
-          <Container maxWidth={false} disableGutters={true}>
+          <Container maxWidth={false}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                 <Tab label="Table View" {...a11yProps(0)} />
@@ -211,10 +209,9 @@ export default function PersistentDrawerLeft() {
               <TableLayout/>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-              To-Go
+              <ToGo/>
             </CustomTabPanel>
           </Container>
-        </React.Fragment>
 
         
       </Main>

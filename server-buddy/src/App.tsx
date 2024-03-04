@@ -2,7 +2,7 @@
 
 import './App.css'
 import * as React from 'react';
-import Drawer from './Drawer'
+import Drawer from './UI/Drawer.tsx'
 
 
 // Import the functions you need from the SDKs you need

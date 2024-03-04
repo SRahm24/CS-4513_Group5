@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid';
-import TableCard from './TableButton_Form';
+import TableCard from './TableButtons';
 
 
 function TableLayout() {
