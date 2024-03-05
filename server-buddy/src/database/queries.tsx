@@ -7,6 +7,7 @@ class Queries {
         const employeeRef = collection(db, "Employees");
         const q = query(employeeRef, where("restaurantID", "==", "restaurantID"));
         const querySnapshot = await getDocs(q);
+        
     }
 
     getEmployeeByEmployeeID = async () => {
@@ -56,6 +57,19 @@ class Queries {
         const q = query(menuRef, where("type", "==", "type"));
         const querySnapshot = await getDocs(q);
     }
+
+    getOrderByStatus = async () => {
+        const orderRef = collection(db, "Orders");
+        const q = query(orderRef, where("status", "==", "status"));
+        const querySnapshot = await getDocs(q);
+    }
+
+    getOderByTicketID = async () => {
+        const orderRef = collection(db, "Orders");
+        const q = query(orderRef, where("ticketID", "==", "ticketID"));
+        const querySnapshot = await getDocs(q);
+    }
+    
 
 
 }
