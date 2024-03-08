@@ -104,7 +104,10 @@ function createData(
                     ))}
                   </TableBody>
                 </Table>
-
+                <Stack spacing={2} p={2} direction="row">
+                    <Button variant="contained">Checkout</Button>
+                    <Button variant="contained">Add item</Button>
+                </Stack>
               </Box>
             </Collapse>
           </TableCell>
@@ -267,6 +270,7 @@ function CollapsibleTable() {
                       <TableCell align="right">Quantity</TableCell>
                       <TableCell align="right">Status</TableCell>
                       <TableCell align="right">Price ($)</TableCell>
+                      <TableCell align="right"></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -280,6 +284,24 @@ function CollapsibleTable() {
                         <TableCell align="right">{item.quantity}</TableCell>
                         <TableCell align="right">{item.status}</TableCell>
                         <TableCell align="right">{item.price}</TableCell>
+                        <Stack p={1}>
+                          <Button variant="contained" onClick={() => {
+                            let table: any[] = [];
+                            let offset = 0;
+                            itemTable.forEach((element: any) => {
+                              if(element.itemId != item.itemId){
+                                element.itemId -= offset;
+                                table.push(element);
+                              }
+                              else{
+                                offset += 1;
+                              }
+                            });
+                            setItemTable(table);
+                          }}>
+                            Remove
+                          </Button>
+                        </Stack>
                       </TableRow>
                     ))}
                   </TableBody>
