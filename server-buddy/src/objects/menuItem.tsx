@@ -1,4 +1,4 @@
-class menuItem {
+class MenuItem {
     constructor(
         public name: string,
         // itemId is the primary key, also used for odering and ticketing.

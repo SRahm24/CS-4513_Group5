@@ -1,10 +1,11 @@
-class ticket {
+class Ticket {
     constructor(
-    public ticketId: number,
-    public orderIds: number[],
+    public ticketId: string,
+    public orderIds: string[],
     public tableId: number,
-    public restaurantId: number,
-    public ticketStatus: string,
+    public restaurantId: string,
+    // ticketStatus: "Open", "Paid", "Void"
+    public ticketStatus: string = "Open",
     public ticketTime: string,
     public subTotal: number,
     public tip: number,
@@ -13,16 +14,16 @@ class ticket {
     ){}
 
     // Getters and Setters
-    public getTicketId(): number {
+    public getTicketId(): string {
         return this.ticketId;
     }
-    public setTicketId(ticketId: number): void {
+    public setTicketId(ticketId: string): void {
         this.ticketId = ticketId;
     }
-    public getOrderIds(): number[] {
+    public getOrderIds(): string[] {
         return this.orderIds;
     }
-    public setOrderIds(orderIds: number[]): void {
+    public setOrderIds(orderIds: string[]): void {
         this.orderIds = orderIds;
     }
     public getTableId(): number {
@@ -31,10 +32,10 @@ class ticket {
     public setTableId(tableId: number): void {
         this.tableId = tableId;
     }
-    public getRestaurantId(): number {
+    public getRestaurantId(): string {
         return this.restaurantId;
     }
-    public setRestaurantId(restaurantId: number): void {
+    public setRestaurantId(restaurantId: string): void {
         this.restaurantId = restaurantId;
     }
     public getTicketStatus(): string {
@@ -73,5 +74,7 @@ class ticket {
     public setTicketTotal(ticketTotal: number): void {
         this.ticketTotal = ticketTotal;
     }
-    
+    public addOrder(orderId: string): void {
+        this.orderIds.push(orderId);
+    }
 }

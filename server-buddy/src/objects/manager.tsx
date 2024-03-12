@@ -1,21 +1,21 @@
-class manager extends employee{
+class Manager extends Employee{
     constructor(
-    public managerId: number,
+    public managerId: string,
     public managerLastName: string,
     public managerFirstName: string,
     public restaurantId: string,
     public hourlyWage: number,
     // Roles: "Manager"
-    public role: string = "manager",
+    public role: string = "Manager",
     ) {
         super(managerId, managerLastName, managerFirstName, restaurantId, hourlyWage, role);
     }
 
     // Getters and Setters
-    public getManagerId(): number {
+    public getManagerId(): string {
         return this.managerId;
     }
-    public setManagerId(managerId: number): void {
+    public setManagerId(managerId: string): void {
         this.managerId = managerId;
     }
     public getManagerLastName(): string {

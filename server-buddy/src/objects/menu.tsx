@@ -1,10 +1,10 @@
-class menu {
+class Menu {
     constructor (
         public menuId: string,
         public restaurantId: string,
         // menuType: "Breakfast", "Lunch", "Dinner", "Dessert", "Drinks", "Appetizers", "Entrees", "Sides", "Specials", "Kids", "Desserts", "Alcohol", "Non-Alcoholic", "All"
         public menuType: string,
-        public menuItems: menuItem[],
+        public menuItems: MenuItem[],
     ){}
 
     // Getters and Setters
@@ -26,10 +26,10 @@ class menu {
     public setMenuType(menuType: string): void {
         this.menuType = menuType;
     }
-    public getMenuItems(): menuItem[] {
+    public getMenuItems(): MenuItem[] {
         return this.menuItems;
     }
-    public setMenuItems(menuItems: menuItem[]): void {
+    public setMenuItems(menuItems: MenuItem[]): void {
         this.menuItems = menuItems;
     }
     

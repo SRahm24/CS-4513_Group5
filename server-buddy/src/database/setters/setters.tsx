@@ -1,6 +1,6 @@
 
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "./firebase";
+import { db } from "../firebase";
 import firebase from "firebase/app";
 
 

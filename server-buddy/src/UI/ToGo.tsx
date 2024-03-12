@@ -26,7 +26,6 @@ let OrderId: number = 0;
 const rows: any[] = [];
 
 
-
 function createData(
     Name:String,
     Time: String,

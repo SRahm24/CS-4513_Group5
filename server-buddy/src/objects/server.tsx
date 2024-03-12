@@ -1,20 +1,20 @@
-class server extends employee{
+class Server extends Employee{
     constructor(
-    public serverId: number,
+    public serverId: string,
     public serverLastName: string,
     public serverFirstName: string,
     public restaurantId: string,
     public hourlyWage: number,
-    public role: string = "server",
+    public role: string = "Server",
     ) {
         super(serverId, serverLastName, serverFirstName, restaurantId, hourlyWage, role);
     }
 
     // Getters and Setters
-    public getServerId(): number {
+    public getServerId(): string {
         return this.serverId;
     }
-    public setServerId(serverId: number): void {
+    public setServerId(serverId: string): void {
         this.serverId = serverId;
     }
     public getServerLastName(): string {

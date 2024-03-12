@@ -1,6 +1,6 @@
-class employee {
+class Employee {
     constructor(
-    public employeeId: number,
+    public employeeId: string,
     public employeeLastName: string,
     public employeeFirstName: string,
     public restaurantId: string,
@@ -12,10 +12,10 @@ class employee {
     ) {}
 
     // Getters and Setters
-    public getEmployeeId(): number {
+    public getEmployeeId(): string {
         return this.employeeId;
     }
-    public setEmployeeId(employeeId: number): void {
+    public setEmployeeId(employeeId: string): void {
         this.employeeId = employeeId;
     }
     public getEmployeeLastName(): string {

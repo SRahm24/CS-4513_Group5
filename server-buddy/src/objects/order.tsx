@@ -1,34 +1,35 @@
-class order {
+class Order {
     constructor(
-    public orderId: number,
-    public ticketId: number,
-    public employeeId: number,
+    public orderId: string,
+    public ticketId: string,
+    public employeeId: string,
     // If -1 Togo order, else dine in
     public tableId: number,
-    public restaurantId: number,
-    public orderTime: string,
-    // orderStatus: "Sent", "In Progress", "Ready"
+    public restaurantId: string,
+    public orderTime: string = new Date().getTime().toString(),
+    public orderDate: string = new Date().toLocaleDateString(),
+    // orderStatus: "Sent", "In Progress", "Ready", "Closed"
     public orderStatus: string,
-    public menuItems: menuItem[],
+    public menuItems: MenuItem[],
     ){}
 
     // Getters and Setters
-    public getOrderId(): number {
+    public getOrderId(): string {
         return this.orderId;
     }
-    public setOrderId(orderId: number): void {
+    public setOrderId(orderId: string): void {
         this.orderId = orderId;
     }
-    public getTicketId(): number {
+    public getTicketId(): string {
         return this.ticketId;
     }
-    public setTicketId(ticketId: number): void {
+    public setTicketId(ticketId: string): void {
         this.ticketId = ticketId;
     }
-    public getEmployeeId(): number {
+    public getEmployeeId(): string {
         return this.employeeId;
     }
-    public setEmployeeId(employeeId: number): void {
+    public setEmployeeId(employeeId: string): void {
         this.employeeId = employeeId;
     }
     public getTableId(): number {
@@ -37,14 +38,17 @@ class order {
     public setTableId(tableId: number): void {
         this.tableId = tableId;
     }
-    public getRestaurantId(): number {
+    public getRestaurantId(): string {
         return this.restaurantId;
     }
-    public setRestaurantId(restaurantId: number): void {
+    public setRestaurantId(restaurantId: string): void {
         this.restaurantId = restaurantId;
     }
     public getOrderTime(): string {
         return this.orderTime;
+    }
+    public getOrderDate(): string {
+        return this.orderDate;
     }
     public setOrderTime(orderTime: string): void {
         this.orderTime = orderTime;
@@ -55,11 +59,24 @@ class order {
     public setOrderStatus(orderStatus: string): void {
         this.orderStatus = orderStatus;
     }
-    public getMenuItems(): menuItem[] {
+    public getMenuItems(): MenuItem[] {
         return this.menuItems;
     }
-    public setMenuItems(menuItems: menuItem[]): void {
+    public setMenuItems(menuItems: MenuItem[]): void {
         this.menuItems = menuItems;
+    }
+    public toJSONObject(): any {
+        return {
+            orderId: this.orderId,
+            ticketId: this.ticketId,
+            employeeId: this.employeeId,
+            tableId: this.tableId,
+            restaurantId: this.restaurantId,
+            orderTime: this.orderTime,
+            orderDate: this.orderDate,
+            orderStatus: this.orderStatus,
+            menuItems: this.menuItems
+        }
     }
     
 }
