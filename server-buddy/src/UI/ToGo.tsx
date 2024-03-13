@@ -25,6 +25,13 @@ import Typography from '@mui/material/Typography';
 let OrderId: number = 0;
 const rows: any[] = [];
 
+function onClickCheckout(row: ReturnType<typeof createData>){
+
+}
+
+function onClickAddItem(row: ReturnType<typeof createData>){
+
+}
 
 
 function createData(
@@ -44,8 +51,6 @@ function createData(
       order,
     };
   }
-
-  
   
   function Row(props: { row: ReturnType<typeof createData> }) {
     const { row } = props;
@@ -105,8 +110,9 @@ function createData(
                   </TableBody>
                 </Table>
                 <Stack spacing={2} p={2} direction="row">
-                    <Button variant="contained">Checkout</Button>
-                    <Button variant="contained">Add item</Button>
+                    <Button variant="contained" onClick={() => onClickCheckout(row)}>Checkout</Button>
+                    <Button variant="contained" onClick={() => onClickAddItem(row)}>Add item</Button>
+                    <Button variant="contained">Remove</Button>
                 </Stack>
               </Box>
             </Collapse>
