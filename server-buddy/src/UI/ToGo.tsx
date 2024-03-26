@@ -21,6 +21,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { Theme, useTheme } from '@mui/material/styles';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 let OrderId: number = 0;
 const rows: any[] = [];
@@ -31,6 +37,33 @@ function onClickCheckout(row: ReturnType<typeof createData>){
 
 function onClickAddItem(row: ReturnType<typeof createData>){
 
+}
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const entireMenu = [
+  {type:"App", name:"Breadsticks", price:2.00},
+  {type:"Entree", name:"Fett Alfredo", price:8.00},
+  {type:"Dessert", name:"Cheese Cake", price:4.00},
+  {type:"Bev", name:"Coke", price:1.00}
+];
+
+function getStyles(name: string, personName: string[], theme: Theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
 }
 
 
@@ -123,7 +156,15 @@ function createData(
   }
   
 function CollapsibleTable() {
-    const [name, setName] = React.useState('');
+    let startMenu: {type: string, name: string, price: number}[] = []
+    entireMenu.forEach(item => {
+      if(item.type == "App"){
+        startMenu.push(item);
+      }
+    });
+    const [menu, setMenu] = React.useState(startMenu);
+
+    const [name, setName] = React.useState('To-Go');
     const [openOrder, setOpenOrder] = React.useState(false);
     const handleClickOpenOrder = () => {
         setOpenOrder(true);
@@ -134,8 +175,8 @@ function CollapsibleTable() {
     };
 
     const [Item, setItem] = React.useState('');
-    const [Type, setType] = React.useState('');
-    const [Quantity, setQuantity] = React.useState(0);
+    const [Type, setType] = React.useState('App');
+    const [Quantity, setQuantity] = React.useState(1);
     const [Status, setStatus] = React.useState('In progress');
     const [Price, setPrice] = React.useState(0.0);
     
@@ -146,8 +187,7 @@ function CollapsibleTable() {
     const handleCloseGetItem = () => {
         setOpenGetItem(false);
         setItem("");
-        setType("");
-        setQuantity(0);
+        setQuantity(1);
         setPrice(0);
     };
 
@@ -166,6 +206,36 @@ function CollapsibleTable() {
       setItemTable((itemTable: any) => []);
     }
 
+    const [alignment, setAlignment] = React.useState('App');
+    const handleToggleChange = (
+      event: React.MouseEvent<HTMLElement>,
+      newAlignment: string,
+    ) => {
+      setAlignment(newAlignment);
+    };
+
+    const theme = useTheme();
+    const [itemName, setItemName] = React.useState<string[]>([]);
+
+    const handleSelectChange = (event: SelectChangeEvent<typeof itemName>) => {
+      const {
+        target: { value },
+      } = event;
+      setItemName(
+        // On autofill we get a stringified value.
+        typeof value === 'string' ? value.split(',') : value,
+      );
+
+      let itemPrice = 0;
+      menu.forEach(item => {
+        if(item.name == value){
+          itemPrice = item.price;
+        }
+      });
+
+      setPrice(itemPrice * Quantity);
+    };
+
     React.useEffect(() => {
       if(isPushing){
         let ItemId = 0;
@@ -177,9 +247,16 @@ function CollapsibleTable() {
         newItemTable.push({itemId: ItemId + 1, item: Item, type: Type, quantity: Quantity, status: Status, price: Price});
 
         setItemTable(newItemTable);
+        setItemName([]);
         setIsPushing(false);
       }
-    }, [isPushing])
+
+      let nme = "";
+      itemName.forEach(char => {
+        nme += char;
+      });
+      setItem(nme);
+    }, [isPushing, itemName])
 
     return (
       <TableContainer component={Paper} >
@@ -328,7 +405,7 @@ function CollapsibleTable() {
                         minutes = "0" + date.getMinutes();
                       }
 
-                      rows.push(createData(name, hours + ":" + minutes, date.getMonth().toString() + "/" + date.getDate().toString(), "In progress", itemTable));
+                      rows.push(createData(name, hours + ":" + minutes, (date.getMonth()+1).toString() + "/" + (date.getDate()).toString(), "In progress", itemTable));
                       handleCloseItemTable();
                       setOpenOrder(false);
                       setName("");
@@ -357,32 +434,83 @@ function CollapsibleTable() {
             >     
                 <DialogTitle>Add item</DialogTitle>
                 <DialogContent>
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="item"
-                    name="item"
-                    label="item"
-                    type="search"
-                    fullWidth
-                    variant="standard"
-                    value={Item}
-                    onChange={(event) => {setItem(event.target.value)}}
-                  />
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="type"
-                    name="type"
-                    label="type"
-                    type="search"
-                    fullWidth
-                    variant="standard"
-                    value={Type}
-                    onChange={(event) => {setType(event.target.value)}}
-                  />
+                <Stack spacing={1}>
+                <ToggleButtonGroup
+                  color="primary"
+                  value={alignment}
+                  exclusive
+                  onChange={handleToggleChange}
+                  aria-label="Platform"
+                >
+                  <ToggleButton value="App" onClick = {() => {
+                    setType("App");
+                    let appMenu: {type: string, name: string, price: number}[] = []
+                    entireMenu.forEach(item => {
+                      if(item.type == "App"){
+                        appMenu.push(item);
+                      }
+                    });
+                    setMenu(appMenu);
+                  }}>
+                    Appetizer
+                  </ToggleButton>
+                  <ToggleButton value="Entree" onClick = {() => {
+                    setType("Entree");
+                    let entreeMenu: {type: string, name: string, price: number}[] = []
+                    entireMenu.forEach(item => {
+                      if(item.type == "Entree"){
+                        entreeMenu.push(item);
+                      }
+                    });
+                    setMenu(entreeMenu);
+                  }}>
+                    Entree
+                  </ToggleButton>
+                  <ToggleButton value="Dessert" onClick = {() => {
+                    setType("Dessert");
+                    let dessMenu: {type: string, name: string, price: number}[] = []
+                    entireMenu.forEach(item => {
+                      if(item.type == "Dessert"){
+                        dessMenu.push(item);
+                      }
+                    });
+                    setMenu(dessMenu);
+                  }}>
+                    Dessert
+                  </ToggleButton>
+                  <ToggleButton value="Bev" onClick = {() => {
+                    setType("Bev");
+                    let bevMenu: {type: string, name: string, price: number}[] = []
+                    entireMenu.forEach(item => {
+                      if(item.type == "Bev"){
+                        bevMenu.push(item);
+                      }
+                    });
+                    setMenu(bevMenu);
+                  }}>
+                    Beverage
+                  </ToggleButton>
+                </ToggleButtonGroup>
+
+                <Select
+                  labelId="item-select"
+                  id="item-select"
+                  value={itemName}
+                  onChange={handleSelectChange}
+                  input={<OutlinedInput label="Name" />}
+                  MenuProps={MenuProps}
+                >
+                  {menu.map((item) => (
+                  <MenuItem
+                    key={item.name}
+                    value={item.name}
+                    style={getStyles(item.name, itemName, theme)}
+                  >
+                    {item.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+
                   <TextField
                     autoFocus
                     required
@@ -394,11 +522,21 @@ function CollapsibleTable() {
                     fullWidth
                     variant="standard"
                     value={Quantity}
-                    onChange={(event) => {setQuantity(Number(event.target.value))}}
+                    onChange={(event) => {
+                      setQuantity(Number(event.target.value));
+                      let itemPrice = 0;
+                      menu.forEach(item => {
+                        if(item.name == itemName[0]){
+                          itemPrice = item.price;
+                        }
+                      });
+
+                      setPrice(itemPrice*Number(event.target.value));
+                    }}
                   />
                   <TextField
                     autoFocus
-                    required
+                    disabled
                     margin="dense"
                     id="price"
                     name="price"
@@ -409,13 +547,12 @@ function CollapsibleTable() {
                     value={Price}
                     onChange={(event) => {setPrice(Number(event.target.value))}}
                   />
-                    
+                </Stack>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseGetItem}>Cancel</Button>
                     <Button type="submit" onClick={() => {
                       setIsPushing(true);
-                      handleCloseGetItem;
                       }}
                     >
                         Enter
