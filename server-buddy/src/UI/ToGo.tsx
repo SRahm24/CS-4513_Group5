@@ -27,6 +27,8 @@ import { Theme, useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { getAllMenus } from '../database/queries/menuAndItemsQueries';
+import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 
 let OrderId: number = 0;
 const rows: any[] = [];
@@ -50,12 +52,13 @@ const MenuProps = {
   },
 };
 
-const entireMenu = [
-  {type:"App", name:"Breadsticks", price:2.00},
-  {type:"Entree", name:"Fett Alfredo", price:8.00},
-  {type:"Dessert", name:"Cheese Cake", price:4.00},
-  {type:"Bev", name:"Coke", price:1.00}
-];
+let entireMenu: QueryDocumentSnapshot<DocumentData>[];
+
+getAllMenus().then(menus => {
+  entireMenu = menus;
+});
+
+
 
 function getStyles(name: string, personName: string[], theme: Theme) {
   return {
@@ -156,9 +159,11 @@ function createData(
   }
   
 function CollapsibleTable() {
+    console.log(entireMenu)
+
     let startMenu: {type: string, name: string, price: number}[] = []
     entireMenu.forEach(item => {
-      if(item.type == "App"){
+      if(item.get('type') == "App"){
         startMenu.push(item);
       }
     });
