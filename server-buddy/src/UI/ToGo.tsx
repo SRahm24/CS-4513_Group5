@@ -52,7 +52,7 @@ const MenuProps = {
   },
 };
 
-let entireMenu: DocumentData[];
+let entireMenu: DocumentData[] = [];
 
 getAllMenus().then(menus => {
   entireMenu = menus;
@@ -159,14 +159,16 @@ function createData(
   }
   
 function CollapsibleTable() {
-    console.log(entireMenu)
+    console.log(entireMenu);
 
-    let startMenu: DocumentData[] = []
+    let startMenu: DocumentData[] = [];
+
     entireMenu.forEach(item => {
       if(item.type == "App"){
         startMenu.push(item);
       }
     });
+
     const [menu, setMenu] = React.useState(startMenu);
 
     const [name, setName] = React.useState('To-Go');
