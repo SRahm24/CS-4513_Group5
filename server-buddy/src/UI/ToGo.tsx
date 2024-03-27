@@ -27,6 +27,8 @@ import { Theme, useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { getAllMenus } from '../database/queries/menuAndItemsQueries';
+import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 
 let OrderId: number = 0;
 const rows: any[] = [];
@@ -50,12 +52,13 @@ const MenuProps = {
   },
 };
 
-const entireMenu = [
-  {type:"App", name:"Breadsticks", price:2.00},
-  {type:"Entree", name:"Fett Alfredo", price:8.00},
-  {type:"Dessert", name:"Cheese Cake", price:4.00},
-  {type:"Bev", name:"Coke", price:1.00}
-];
+let entireMenu: DocumentData[];
+
+getAllMenus().then(menus => {
+  entireMenu = menus;
+});
+
+
 
 function getStyles(name: string, personName: string[], theme: Theme) {
   return {
@@ -156,7 +159,9 @@ function createData(
   }
   
 function CollapsibleTable() {
-    let startMenu: {type: string, name: string, price: number}[] = []
+    console.log(entireMenu)
+
+    let startMenu: DocumentData[] = []
     entireMenu.forEach(item => {
       if(item.type == "App"){
         startMenu.push(item);
@@ -444,7 +449,7 @@ function CollapsibleTable() {
                 >
                   <ToggleButton value="App" onClick = {() => {
                     setType("App");
-                    let appMenu: {type: string, name: string, price: number}[] = []
+                    let appMenu: DocumentData[] = []
                     entireMenu.forEach(item => {
                       if(item.type == "App"){
                         appMenu.push(item);
@@ -456,7 +461,7 @@ function CollapsibleTable() {
                   </ToggleButton>
                   <ToggleButton value="Entree" onClick = {() => {
                     setType("Entree");
-                    let entreeMenu: {type: string, name: string, price: number}[] = []
+                    let entreeMenu: DocumentData[] = []
                     entireMenu.forEach(item => {
                       if(item.type == "Entree"){
                         entreeMenu.push(item);
@@ -468,7 +473,7 @@ function CollapsibleTable() {
                   </ToggleButton>
                   <ToggleButton value="Dessert" onClick = {() => {
                     setType("Dessert");
-                    let dessMenu: {type: string, name: string, price: number}[] = []
+                    let dessMenu: DocumentData[] = []
                     entireMenu.forEach(item => {
                       if(item.type == "Dessert"){
                         dessMenu.push(item);
@@ -480,7 +485,7 @@ function CollapsibleTable() {
                   </ToggleButton>
                   <ToggleButton value="Bev" onClick = {() => {
                     setType("Bev");
-                    let bevMenu: {type: string, name: string, price: number}[] = []
+                    let bevMenu: DocumentData[] = []
                     entireMenu.forEach(item => {
                       if(item.type == "Bev"){
                         bevMenu.push(item);
