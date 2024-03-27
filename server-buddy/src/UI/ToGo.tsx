@@ -52,7 +52,7 @@ const MenuProps = {
   },
 };
 
-let entireMenu: QueryDocumentSnapshot<DocumentData>[];
+let entireMenu: DocumentData[];
 
 getAllMenus().then(menus => {
   entireMenu = menus;
@@ -161,9 +161,9 @@ function createData(
 function CollapsibleTable() {
     console.log(entireMenu)
 
-    let startMenu: {type: string, name: string, price: number}[] = []
+    let startMenu: DocumentData[] = []
     entireMenu.forEach(item => {
-      if(item.get('type') == "App"){
+      if(item.type == "App"){
         startMenu.push(item);
       }
     });
@@ -449,7 +449,7 @@ function CollapsibleTable() {
                 >
                   <ToggleButton value="App" onClick = {() => {
                     setType("App");
-                    let appMenu: {type: string, name: string, price: number}[] = []
+                    let appMenu: DocumentData[] = []
                     entireMenu.forEach(item => {
                       if(item.type == "App"){
                         appMenu.push(item);
@@ -461,7 +461,7 @@ function CollapsibleTable() {
                   </ToggleButton>
                   <ToggleButton value="Entree" onClick = {() => {
                     setType("Entree");
-                    let entreeMenu: {type: string, name: string, price: number}[] = []
+                    let entreeMenu: DocumentData[] = []
                     entireMenu.forEach(item => {
                       if(item.type == "Entree"){
                         entreeMenu.push(item);
@@ -473,7 +473,7 @@ function CollapsibleTable() {
                   </ToggleButton>
                   <ToggleButton value="Dessert" onClick = {() => {
                     setType("Dessert");
-                    let dessMenu: {type: string, name: string, price: number}[] = []
+                    let dessMenu: DocumentData[] = []
                     entireMenu.forEach(item => {
                       if(item.type == "Dessert"){
                         dessMenu.push(item);
@@ -485,7 +485,7 @@ function CollapsibleTable() {
                   </ToggleButton>
                   <ToggleButton value="Bev" onClick = {() => {
                     setType("Bev");
-                    let bevMenu: {type: string, name: string, price: number}[] = []
+                    let bevMenu: DocumentData[] = []
                     entireMenu.forEach(item => {
                       if(item.type == "Bev"){
                         bevMenu.push(item);
