@@ -1,4 +1,6 @@
-class Menu {
+import { MenuItem } from "./menuItem";
+
+export class Menu {
     constructor (
         public menuId: string,
         public restaurantId: string,

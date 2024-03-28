@@ -1,4 +1,6 @@
-class Manager extends Employee{
+import { Employee } from './employee';
+
+export class Manager extends Employee{
     constructor(
     public managerId: string,
     public managerLastName: string,

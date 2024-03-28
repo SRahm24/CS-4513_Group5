@@ -1,4 +1,6 @@
-class Order {
+import { MenuItem } from "./menuItem";
+
+export class Order {
     constructor(
     public orderId: string,
     public ticketId: string,

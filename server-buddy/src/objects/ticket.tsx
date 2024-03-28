@@ -1,4 +1,4 @@
-class Ticket {
+export class Ticket {
     constructor(
     public ticketId: string,
     public orderIds: string[],

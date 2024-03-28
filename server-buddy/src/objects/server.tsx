@@ -1,4 +1,6 @@
-class Server extends Employee{
+import { Employee } from './employee';
+
+export class Server extends Employee{
     constructor(
     public serverId: string,
     public serverLastName: string,

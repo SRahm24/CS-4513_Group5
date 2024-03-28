@@ -1,4 +1,4 @@
-class Restaurant {
+export class Restaurant {
     constructor(
     public restaurantID: string,
     public restaurantName: string,
