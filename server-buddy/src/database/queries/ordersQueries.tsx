@@ -42,7 +42,7 @@ class OrdersQueries {
         const querySnapshot = await getDocs(q);
     }
 
-    getOderByTicketID = async () => {
+    getOrderByTicketID = async () => {
         const q = query(orderRef, where("ticketId", "==", "ticketId"));
         const querySnapshot = await getDocs(q);
     }

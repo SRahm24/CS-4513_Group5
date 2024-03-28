@@ -218,7 +218,9 @@ function CollapsibleTable() {
       event: React.MouseEvent<HTMLElement>,
       newAlignment: string,
     ) => {
-      setAlignment(newAlignment);
+      if (newAlignment !== null) {
+        setAlignment(newAlignment);
+      }
     };
 
     const theme = useTheme();
