@@ -3,19 +3,20 @@ import { db } from "../firebase";
 
 const orderRef = collection(db, "Orders")
 
-class OrdersQueries {
-    
-    getAllOrders = async() => {
+export const getAllOrders = async() => {
         const q = query(orderRef)
         const result: QueryDocumentSnapshot<DocumentData>[] = [];
-        const querySnapshot = await getDocsFromServer(q)
-        if (!querySnapshot.empty){
-            querySnapshot.forEach((snapshot)=>{result.push(snapshot)})
-            console.log("Orders:")
-        } else {
-            console.log("No such document")
-        }
+        (await getDocsFromServer(q)).forEach((doc) => {
+        result.push(doc);
+    });
+        console.log(result.map((doc) => doc.data()));
+        return result.map((doc) => doc.data());
     }
+
+
+class OrdersQueries {
+    
+    
 
     getAllOrdersByRestaurantID = async (restaurantId: string) => {
         const q = query(orderRef, where("restaurantId", "==", restaurantId));
