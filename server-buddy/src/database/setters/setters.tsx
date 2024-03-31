@@ -7,7 +7,7 @@ import { Ticket } from "../../objects/ticket";
 
 export class setters {
     // Add an order to the database
-    static async addOrder(order: Order) {
+    static async pushOrder(order: Order) {
         const orderRef = collection(db, "Orders");
         const orderDoc = doc(orderRef, order.getOrderId());
         await setDoc(orderDoc, {
@@ -23,7 +23,7 @@ export class setters {
     }
 
     // Add a ticket to the database
-    static async addTicket(ticket: Ticket) {
+    static async pushTicket(ticket: Ticket) {
         const ticketRef = collection(db, "Tickets");
         const ticketDoc = doc(ticketRef, ticket.getTicketId());
         await setDoc(ticketDoc, {

@@ -3,18 +3,16 @@ import { db } from "../firebase";
 
 const menuRef = collection(db, "Menu");
 
-export const getAllMenus = async () => {
+export class MenuAndItemsQueries {
+    static getAllMenus = async () => {
     const q = query(menuRef)
     const result: QueryDocumentSnapshot<DocumentData>[] = [];
     (await getDocsFromServer(q)).forEach((doc) => {
     result.push(doc);
-});
+        });
     //console.log(result.map((doc) => doc.data()));
     return result.map((doc) => doc.data());
-}
-
-
-class MenuAndItemsQueries {
+    }
 
     getMenuByRestaurantID = async (restaurantId: string) => {
         const menuRef = collection(db, "Menus");

@@ -1,5 +1,3 @@
-import { MenuItem } from "./menuItem";
-
 /*
 Orders are used to build an order and send to the kitchen or bar.
 Orders are created by employees and are associated with a ticket.
@@ -16,7 +14,8 @@ export class Order {
     public orderDateTime: string,
     // orderStatus: "Sent", "In Progress", "Ready", "Closed"
     public orderStatus: string,
-    public menuItems: MenuItem[],
+    // menuItems is an array of itemId on the order
+    public menuItems: string[],
     ){}
 
     // Getters and Setters
@@ -53,19 +52,16 @@ export class Order {
     public getOrderDateTime(): string {
         return this.orderDateTime;
     }
-    public setOrderTime(orderTime: string): void {
-        this.orderTime = orderTime;
-    }
     public getOrderStatus(): string {
         return this.orderStatus;
     }
     public setOrderStatus(orderStatus: string): void {
         this.orderStatus = orderStatus;
     }
-    public getMenuItems(): MenuItem[] {
+    public getMenuItems(): string[] {
         return this.menuItems;
     }
-    public setMenuItems(menuItems: MenuItem[]): void {
+    public setMenuItems(menuItems: []): void {
         this.menuItems = menuItems;
     }
     public toJSONObject(): any {

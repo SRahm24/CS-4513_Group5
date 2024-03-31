@@ -1,4 +1,4 @@
-export class MenuItem {
+export class Item {
     constructor(
         public name: string,
         // itemId is the primary key, also used for odering and ticketing.

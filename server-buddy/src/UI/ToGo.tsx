@@ -27,10 +27,11 @@ import { Theme, useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { getAllMenus } from '../database/queries/menuAndItemsQueries';
+import { MenuAndItemsQueries } from '../database/queries/menuAndItemsQueries';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { setters } from '../database/setters/setters';
 import { Order } from '../objects/order';
+import { Item } from '../objects/menuItem';
 
 let OrderId: number = 0;
 const rows: any[] = [];
@@ -55,16 +56,15 @@ const MenuProps = {
 };
 
 let entireMenu: DocumentData[];
-
-getAllMenus().then(menus => {
+MenuAndItemsQueries.getAllMenus().then(menus => {
   entireMenu = menus;
 });
 
 // Sample order to test
-const sampleOrder: Order = new Order("ord_1", "tick_1", "emp_1", -1, "rest_1", " " , "In progress", []);
-const sampleOrder2: Order = new Order("ord_2", "tick_1", "emp_1", -1, "rest_1", " " , "In progress", []);
-setters.addOrder(sampleOrder);
-setters.addOrder(sampleOrder2);
+const sampleOrder: Order = new Order("ord_1", "tick_1", "emp_1", -1, "rest_1", " " , "In progress", ["Item_3", "Item_5"]);
+const sampleOrder2: Order = new Order("ord_2", "tick_1", "emp_1", -1, "rest_1", " " , "In progress", ["Item_4", "Item_6"]);
+setters.pushOrder(sampleOrder);
+setters.pushOrder(sampleOrder2);
 
 function getStyles(name: string, personName: string[], theme: Theme) {
   return {

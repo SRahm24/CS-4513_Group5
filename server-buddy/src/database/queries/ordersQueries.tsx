@@ -4,18 +4,17 @@ import { Order } from "../../objects/order";
 
 const orderRef = collection(db, "Orders")
 
-export const getAllOrders = async() => {
+export class OrdersQueries {
+
+    getAllOrders = async() => {
     const q = query(orderRef)
     const result: QueryDocumentSnapshot<DocumentData>[] = [];
     (await getDocsFromServer(q)).forEach((doc) => {
     result.push(doc);
-});
+        });
     console.log(result.map((doc) => doc.data()));
     return result.map((doc) => doc.data());
-}
-
-
-class OrdersQueries {
+    }
 
     getAllOrdersByRestaurantID = async (restaurantId: string) => {
         const q = query(orderRef, where("restaurantId", "==", restaurantId));
