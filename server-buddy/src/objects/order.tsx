@@ -1,5 +1,10 @@
 import { MenuItem } from "./menuItem";
 
+/*
+Orders are used to build an order and send to the kitchen or bar.
+Orders are created by employees and are associated with a ticket.
+Orders can be dine-in(Table number) or to-go(Table -1).
+*/
 export class Order {
     constructor(
     public orderId: string,
@@ -8,8 +13,7 @@ export class Order {
     // If -1 Togo order, else dine in
     public tableId: number,
     public restaurantId: string,
-    public orderTime: string = new Date().getTime().toString(),
-    public orderDate: string = new Date().toLocaleDateString(),
+    public orderDateTime: string,
     // orderStatus: "Sent", "In Progress", "Ready", "Closed"
     public orderStatus: string,
     public menuItems: MenuItem[],
@@ -46,11 +50,8 @@ export class Order {
     public setRestaurantId(restaurantId: string): void {
         this.restaurantId = restaurantId;
     }
-    public getOrderTime(): string {
-        return this.orderTime;
-    }
-    public getOrderDate(): string {
-        return this.orderDate;
+    public getOrderDateTime(): string {
+        return this.orderDateTime;
     }
     public setOrderTime(orderTime: string): void {
         this.orderTime = orderTime;
@@ -74,8 +75,7 @@ export class Order {
             employeeId: this.employeeId,
             tableId: this.tableId,
             restaurantId: this.restaurantId,
-            orderTime: this.orderTime,
-            orderDate: this.orderDate,
+            orderDateTime: this.orderDateTime,
             orderStatus: this.orderStatus,
             menuItems: this.menuItems
         }

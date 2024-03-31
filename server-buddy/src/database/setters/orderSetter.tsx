@@ -4,6 +4,7 @@ import { Order } from "../../objects/order";
 
 const orderRef = collection(db, "Orders");
 
+// Add an order to the database
 export const addOrder = async (order: Order) => {
     const orderDoc = doc(orderRef, order.getOrderId());
     await setDoc(orderDoc, {

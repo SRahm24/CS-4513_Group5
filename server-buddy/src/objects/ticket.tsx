@@ -1,11 +1,19 @@
+/*
+Tickets are created when a table is seated. They are used to keep track of orders and payments.
+*/
 export class Ticket {
     constructor(
+    // ticketId is used to keep track of the ticket.
     public ticketId: string,
+    // orderIds are used to keep track of all orders associated with the ticket.
     public orderIds: string[],
+    // tableId is used to keep track of the table associated with the ticket. -1 is to-go.
     public tableId: number,
+    // restaurantId is used to keep track of the restaurant associated with the ticket.
     public restaurantId: string,
     // ticketStatus: "Open", "Paid", "Void"
     public ticketStatus: string = "Open",
+    // ticketTime is the time the ticket was created and set to fireStore serverTimestamp.
     public ticketTime: string,
     public subTotal: number,
     public tip: number,

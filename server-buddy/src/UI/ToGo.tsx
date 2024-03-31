@@ -29,6 +29,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { getAllMenus } from '../database/queries/menuAndItemsQueries';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
+import { setters } from '../database/setters/setters';
+import { Order } from '../objects/order';
 
 let OrderId: number = 0;
 const rows: any[] = [];
@@ -58,7 +60,11 @@ getAllMenus().then(menus => {
   entireMenu = menus;
 });
 
-
+// Sample order to test
+const sampleOrder: Order = new Order("ord_1", "tick_1", "emp_1", -1, "rest_1", " " , "In progress", []);
+const sampleOrder2: Order = new Order("ord_2", "tick_1", "emp_1", -1, "rest_1", " " , "In progress", []);
+setters.addOrder(sampleOrder);
+setters.addOrder(sampleOrder2);
 
 function getStyles(name: string, personName: string[], theme: Theme) {
   return {

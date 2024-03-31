@@ -1,23 +1,39 @@
 
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, where, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
-import firebase from "firebase/app";
+import { Order } from "../../objects/order";
+import { Restaurant } from "../../objects/restaurant";
+import { Ticket } from "../../objects/ticket";
 
-
-class setters {
-  static async setServer(server: Server) {
-    const db = firebase.firestore();
-    const serverRef = db.collection('servers').doc(server.id);
-    await serverRef.set(server);
-  }
-    static async setOrder(order: Order) {
-        const db = firebase.firestore();
-        const orderRef = db.collection('orders').doc(order.id);
-        await orderRef.set(order);
+export class setters {
+    // Add an order to the database
+    static async addOrder(order: Order) {
+        const orderRef = collection(db, "Orders");
+        const orderDoc = doc(orderRef, order.getOrderId());
+        await setDoc(orderDoc, {
+            orderId: order.getOrderId(),
+            ticketId: order.getTicketId(),
+            employeeId: order.getEmployeeId(),
+            tableId: order.getTableId(),
+            restaurantId: order.getRestaurantId(),
+            orderDateTime: serverTimestamp(),
+            orderStatus: order.getOrderStatus(),
+            menuItems: order.getMenuItems()
+        });
     }
-    static async setMenuItem(menu: Menu) {
-        const db = firebase.firestore();
-        const menuRef = db.collection('menus').doc(menu.id);
-        await menuRef.set(menu);
+
+    // Add a ticket to the database
+    static async addTicket(ticket: Ticket) {
+        const ticketRef = collection(db, "Tickets");
+        const ticketDoc = doc(ticketRef, ticket.getTicketId());
+        await setDoc(ticketDoc, {
+            ticketId: ticket.getTicketId(),
+            tableId: ticket.getTableId(),
+            orderIds: ticket.getOrderIds(),
+            restaurantId: ticket.getRestaurantId(),
+            ticketStatus: ticket.getTicketStatus(),
+            ticketTime: serverTimestamp(),
+            ticketTotal: ticket.getTicketTotal(),
+        });
     }
 }
