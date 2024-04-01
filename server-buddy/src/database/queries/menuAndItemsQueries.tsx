@@ -8,22 +8,11 @@ export class MenuAndItemsQueries {
     static getAllMenus = async () => {
         const q = query(menuRef)
         const result: QueryDocumentSnapshot<DocumentData>[] = [];
-        (await getDocsFromServer(q)).forEach((doc) => {
-        result.push(doc);
-            });
+        await (await getDocsFromServer(q)).forEach((doc) => {
+            result.push(doc);
+        });
         //console.log(result.map((doc) => doc.data()));
-        result.map((doc) => doc.data());
-        const menus: Menu[] = [];
-        for (let i = 0; i < result.length; i++) {
-            console.log(result[i].get("name"));
-            menus.push(new Menu(
-                "menuId" + i,
-                result[i].get("name"),
-                result[i].get("price"),
-                result[i].get("type")));
-        }
-        console.log(menus);
-        return menus;
+        return result.map((doc) => doc.data());
     }
 
     // getMenuByRestaurantID = async (restaurantId: string) => {

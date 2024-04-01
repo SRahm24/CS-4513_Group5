@@ -60,7 +60,7 @@ const MenuProps = {
 
 let entireMenu: DocumentData[] = [];
 
-getAllMenus().then(menus => {
+MenuAndItemsQueries.getAllMenus().then(menus => {
   entireMenu = menus;
 });
 

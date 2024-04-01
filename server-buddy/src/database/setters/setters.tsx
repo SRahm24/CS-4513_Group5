@@ -29,6 +29,7 @@ export class setters {
         await setDoc(ticketDoc, {
             ticketId: ticket.getTicketId(),
             orderIds: ticket.getOrderIds(),
+            ticketName: ticket.getTicketName(),
             restaurantId: ticket.getRestaurantId(),
             ticketStatus: ticket.getTicketStatus(),
             ticketTime: serverTimestamp(),
