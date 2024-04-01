@@ -28,12 +28,10 @@ export class setters {
         const ticketDoc = doc(ticketRef, ticket.getTicketId());
         await setDoc(ticketDoc, {
             ticketId: ticket.getTicketId(),
-            tableId: ticket.getTableId(),
             orderIds: ticket.getOrderIds(),
             restaurantId: ticket.getRestaurantId(),
             ticketStatus: ticket.getTicketStatus(),
             ticketTime: serverTimestamp(),
-            ticketTotal: ticket.getTicketTotal(),
         });
     }
 }

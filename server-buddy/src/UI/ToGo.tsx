@@ -32,8 +32,11 @@ import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { setters } from '../database/setters/setters';
 import { Order } from '../objects/order';
 import { Item } from '../objects/menuItem';
+import { TicketManager } from './TicketManager';
 
-let OrderId: number = 0;
+const manager: TicketManager = new TicketManager();
+
+let TicketId: number = 0;
 const rows: any[] = [];
 
 function onClickCheckout(row: ReturnType<typeof createData>){
@@ -60,12 +63,6 @@ MenuAndItemsQueries.getAllMenus().then(menus => {
   entireMenu = menus;
 });
 
-// Sample order to test
-const sampleOrder: Order = new Order("ord_1", "tick_1", "emp_1", -1, "rest_1", " " , "In progress", ["Item_3", "Item_5"]);
-const sampleOrder2: Order = new Order("ord_2", "tick_1", "emp_1", -1, "rest_1", " " , "In progress", ["Item_4", "Item_6"]);
-setters.pushOrder(sampleOrder);
-setters.pushOrder(sampleOrder2);
-
 function getStyles(name: string, personName: string[], theme: Theme) {
   return {
     fontWeight:
@@ -83,9 +80,9 @@ function createData(
     Status: String,
     order: any[]
   ) {
-    OrderId += 1;
+    TicketId += 1;
     return {
-      OrderId,
+      TicketId,
       Name,
       Time,
       Date,
@@ -111,7 +108,7 @@ function createData(
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row">
-            {row.OrderId}
+            {row.TicketId}
           </TableCell>
           <TableCell align="right">{row.Name}</TableCell>
           <TableCell align="right">{row.Time}</TableCell>
@@ -284,7 +281,7 @@ function CollapsibleTable() {
           </TableHead>
           <TableBody>
             {rows.map((row) => (
-              <Row key={row.OrderId} row={row} />
+              <Row key={row.TicketId} row={row} />
             ))}
           </TableBody>
         </Table>
@@ -409,14 +406,16 @@ function CollapsibleTable() {
                 <DialogActions>
                     <Button onClick={() => {setOpenItemTable(false); setItemTable((itemTable: any) => []);}}>Back</Button>
                     <Button type="submit" onClick={() => {
-                      let date = new Date(); 
-                      let hours: String = (date.getHours() % 12).toString();
-                      let minutes: String = date.getMinutes().toString();
-                      if (date.getMinutes() < 10){
-                        minutes = "0" + date.getMinutes();
-                      }
 
-                      rows.push(createData(name, hours + ":" + minutes, (date.getMonth()+1).toString() + "/" + (date.getDate()).toString(), "In progress", itemTable));
+                      let itemArray: {itemName: string, price: number}[] = [];
+                      itemTable.forEach((item: any) => {
+                        for(let i = 0; i < item.quantity; i++){
+                          itemArray.push({itemName: item.name, price: item.price});
+                        }
+                      });
+
+                      manager.addTicket(name, "Open", itemArray);
+                      
                       handleCloseItemTable();
                       setOpenOrder(false);
                       setName("");
