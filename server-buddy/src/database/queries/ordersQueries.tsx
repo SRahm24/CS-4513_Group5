@@ -1,20 +1,29 @@
 import { collection, getDocs, getDocsFromServer, query, where, QueryDocumentSnapshot, DocumentData, } from "firebase/firestore";
 import { db } from "../firebase";
-import { Order } from "../../objects/order";
 
 const orderRef = collection(db, "Orders")
 
-export class OrdersQueries {
-
-    getAllOrders = async() => {
-    const q = query(orderRef)
-    const result: QueryDocumentSnapshot<DocumentData>[] = [];
-    (await getDocsFromServer(q)).forEach((doc) => {
-    result.push(doc);
-        });
-    console.log(result.map((doc) => doc.data()));
-    return result.map((doc) => doc.data());
+export const getAllOrders = async() => {
+        const q = query(orderRef)
+        const result: QueryDocumentSnapshot<DocumentData>[] = [];
+        (await getDocsFromServer(q)).forEach((doc) => {
+        result.push(doc);
+    });
+        console.log(result.map((doc) => doc.data()));
+        return result.map((doc) => doc.data());
     }
+
+export const getOrderSize = async() => {
+    const q = query(orderRef)
+    let size = 0;
+    (await getDocsFromServer(q)).forEach((doc) => {
+        size += 1;
+    });
+    return size;
+}
+
+
+class OrdersQueries {
 
     getAllOrdersByRestaurantID = async (restaurantId: string) => {
         const q = query(orderRef, where("restaurantId", "==", restaurantId));
@@ -41,7 +50,7 @@ export class OrdersQueries {
         const querySnapshot = await getDocs(q);
     }
 
-    getOrderByTicketID = async () => {
+    getOderByTicketID = async () => {
         const q = query(orderRef, where("ticketId", "==", "ticketId"));
         const querySnapshot = await getDocs(q);
     }
