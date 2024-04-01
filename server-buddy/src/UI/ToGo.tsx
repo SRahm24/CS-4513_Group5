@@ -58,8 +58,9 @@ const MenuProps = {
   },
 };
 
-let entireMenu: DocumentData[];
-MenuAndItemsQueries.getAllMenus().then(menus => {
+let entireMenu: DocumentData[] = [];
+
+getAllMenus().then(menus => {
   entireMenu = menus;
 });
 
@@ -162,14 +163,16 @@ function createData(
   }
   
 function CollapsibleTable() {
-    console.log(entireMenu)
+    console.log(entireMenu);
 
-    let startMenu: DocumentData[] = []
+    let startMenu: DocumentData[] = [];
+
     entireMenu.forEach(item => {
       if(item.type == "App"){
         startMenu.push(item);
       }
     });
+
     const [menu, setMenu] = React.useState(startMenu);
 
     const [name, setName] = React.useState('To-Go');
@@ -219,7 +222,9 @@ function CollapsibleTable() {
       event: React.MouseEvent<HTMLElement>,
       newAlignment: string,
     ) => {
-      setAlignment(newAlignment);
+      if (newAlignment !== null) {
+        setAlignment(newAlignment);
+      }
     };
 
     const theme = useTheme();
