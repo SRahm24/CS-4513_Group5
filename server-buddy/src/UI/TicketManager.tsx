@@ -29,28 +29,34 @@ export class TicketManager{
             let dateString: string = (date.getMonth()+1).toString() + "/" + (date.getDate()).toString();
 
             this.orderID += 1;
-            let order: Order = new Order(this.orderID.toString(), _ticketId, _employeeId, _tableNum, _restaurantId, dateString, _status, _items);
+            let order: Order = new Order((this.orderID).toString(), _ticketId, _employeeId, _tableNum, _restaurantId, dateString, _status, _items);
             setters.pushOrder(order);
     }
 
-    addTicket(_name: string, _status: string, _itemPrices: {itemName: string, price: number}[]){
+    addTicket(name: string, status: string, itemPrices: {itemName: string, price: number}[]){
         let orderIDArray: string[] = [];
         this.orderID += 1;
         orderIDArray.push(this.orderID.toString());
         let orderNameArray: string[] = [];
         let ticketPrice: number = 0;
-        _itemPrices.forEach(element => {
+        console.log("itemPrices length: " + itemPrices.length);
+        console.log(itemPrices);
+        let i = 0;
+        itemPrices.forEach(element => {
+            i++;
             orderNameArray.push(element.itemName);
             ticketPrice += element.price;
         });
+
+        console.log("orderNameArray length:" + orderNameArray.length);
 
         let date = new Date();
 
         let dateString: string = (date.getMonth()+1).toString() + "/" + (date.getDate()).toString();
         this.ticketID += 1;
-        let newTicket: Ticket = new Ticket(this.ticketID.toString(), orderIDArray, _name, "", _status, dateString, ticketPrice);
-        let newOrder: Order = new Order(this.orderID.toString(), this.ticketID.toString(), "", -1, "", dateString, "In Progress", orderNameArray);
-
+        const newTicket: Ticket = new Ticket(this.ticketID.toString(), orderIDArray, name, "", status, dateString, ticketPrice);
+        const newOrder: Order = new Order("ord_" + (this.orderID).toString(), this.ticketID.toString(), "", -1, "", dateString, "In Progress", orderNameArray);
+        
         setters.pushTicket(newTicket);
         setters.pushOrder(newOrder);
     }

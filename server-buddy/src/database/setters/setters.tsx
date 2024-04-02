@@ -1,5 +1,5 @@
 
-import { collection, doc, getDocs, query, setDoc, where, serverTimestamp } from "firebase/firestore";
+import { collection, doc, getDocs, query, setDoc, where, serverTimestamp, DocumentReference } from "firebase/firestore";
 import { db } from "../firebase";
 import { Order } from "../../objects/order";
 import { Restaurant } from "../../objects/restaurant";
@@ -9,7 +9,7 @@ export class setters {
     // Add an order to the database
     static async pushOrder(order: Order) {
         const orderRef = collection(db, "Orders");
-        const orderDoc = doc(orderRef, order.getOrderId());
+        const orderDoc: DocumentReference = doc(orderRef, order.getOrderId());
         await setDoc(orderDoc, {
             orderId: order.getOrderId(),
             ticketId: order.getTicketId(),

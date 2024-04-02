@@ -413,9 +413,10 @@ function CollapsibleTable() {
                     <Button type="submit" onClick={() => {
 
                       let itemArray: {itemName: string, price: number}[] = [];
+                      console.log(itemTable);
                       itemTable.forEach((item: any) => {
                         for(let i = 0; i < item.quantity; i++){
-                          itemArray.push({itemName: item.name, price: item.price});
+                          itemArray.push({itemName: item.item, price: item.price});
                         }
                       });
 
