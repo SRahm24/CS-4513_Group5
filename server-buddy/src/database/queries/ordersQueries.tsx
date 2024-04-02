@@ -1,4 +1,4 @@
-import { collection, getDocs, getDocsFromServer, query, where, QueryDocumentSnapshot, DocumentData, } from "firebase/firestore";
+import { collection, getDocs, getDocsFromServer, query, where, QueryDocumentSnapshot, DocumentData, or, } from "firebase/firestore";
 import { db } from "../firebase";
 import { Order } from "../../objects/order";
 
@@ -7,47 +7,61 @@ const orderRef = collection(db, "Orders")
 export class OrdersQueries {
 
     getAllOrders = async() => {
-    const q = query(orderRef)
-    const result: QueryDocumentSnapshot<DocumentData>[] = [];
-    (await getDocsFromServer(q)).forEach((doc) => {
-    result.push(doc);
-        });
-    console.log(result.map((doc) => doc.data()));
-    return result.map((doc) => doc.data());
+        const q = query(orderRef)
+        const result: QueryDocumentSnapshot<DocumentData>[] = [];
+        (await getDocsFromServer(q)).forEach((doc) => {
+        result.push(doc);
+            });
+        // console.log(result.map((doc) => doc.data()));
+        result.map((doc) => doc.data());
+        const orders: Order[] = [];
+        for (let i = 0; i < result.length; i++) {
+            orders.push(new Order(
+                result[i].data().orderId,
+                result[i].data().ticketId, 
+                result[i].data().employeeId, 
+                result[i].data().tableId, 
+                result[i].data().restaurantId, 
+                result[i].data().orderDateTime, 
+                result[i].data().orderStatus, 
+                result[i].data().menuItems));
+        }
+        console.log(orders);
+        return orders;
     }
 
-    getAllOrdersByRestaurantID = async (restaurantId: string) => {
-        const q = query(orderRef, where("restaurantId", "==", restaurantId));
-        const querySnapshot = await getDocs(q);
-    }
+    // getAllOrdersByRestaurantID = async (restaurantId: string) => {
+    //     const q = query(orderRef, where("restaurantId", "==", restaurantId));
+    //     const querySnapshot = await getDocs(q);
+    // }
 
-    getTimeRangeOrdersByRestaurantID = async (restaurantId: string, date: string) => {
-        const q = query(orderRef, where("restaurantId", "==", restaurantId), where("orderDate", ">=", date));
-        const querySnapshot = await getDocs(q);
-    }
+    // getTimeRangeOrdersByRestaurantID = async (restaurantId: string, date: string) => {
+    //     const q = query(orderRef, where("restaurantId", "==", restaurantId), where("orderDate", ">=", date));
+    //     const querySnapshot = await getDocs(q);
+    // }
 
-    getOrdersByEmployeeID = async (restaurantId: string, employeeId: string) => {
-        const q = query(orderRef, where("employeeId", "==", employeeId), where("restaurantId", "==", restaurantId));
-        const querySnapshot = await getDocs(q);
-    }
+    // getOrdersByEmployeeID = async (restaurantId: string, employeeId: string) => {
+    //     const q = query(orderRef, where("employeeId", "==", employeeId), where("restaurantId", "==", restaurantId));
+    //     const querySnapshot = await getDocs(q);
+    // }
 
-    getOrdersByRestaurantAndOrderID = async (restaurantId:string, orderId: number) => {
-        const q = query(orderRef, where("orderId", "==", orderId), where("restaurantId", "==", restaurantId));
-        const querySnapshot = await getDocs(q);
-    }
+    // getOrdersByRestaurantAndOrderID = async (restaurantId:string, orderId: number) => {
+    //     const q = query(orderRef, where("orderId", "==", orderId), where("restaurantId", "==", restaurantId));
+    //     const querySnapshot = await getDocs(q);
+    // }
 
-    getOrderByStatus = async () => {
-        const q = query(orderRef, where("status", "==", "status"));
-        const querySnapshot = await getDocs(q);
-    }
+    // getOrderByStatus = async () => {
+    //     const q = query(orderRef, where("status", "==", "status"));
+    //     const querySnapshot = await getDocs(q);
+    // }
 
-    getOderByTicketID = async () => {
-        const q = query(orderRef, where("ticketId", "==", "ticketId"));
-        const querySnapshot = await getDocs(q);
-    }
+    // getOderByTicketID = async () => {
+    //     const q = query(orderRef, where("ticketId", "==", "ticketId"));
+    //     const querySnapshot = await getDocs(q);
+    // }
     
-    getOrdersByCustomerID = async () => {
-        const q = query(orderRef, where("customerId", "==", "customerId"));
-        const querySnapshot = await getDocs(q);
-    }
+    // getOrdersByCustomerID = async () => {
+    //     const q = query(orderRef, where("customerId", "==", "customerId"));
+    //     const querySnapshot = await getDocs(q);
+    // }
 }
