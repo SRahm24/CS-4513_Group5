@@ -4,9 +4,13 @@ import { db } from "../firebase";
 import { Order } from "../../objects/order";
 import { Restaurant } from "../../objects/restaurant";
 import { Ticket } from "../../objects/ticket";
+import { Item } from "../../objects/menuItem";
 
 export class setters {
-    // Add an order to the database
+    /*
+    pushOrder takes an order object and pushes it to the database
+    Order object is defined in objects/order.tsx
+     */
     static async pushOrder(order: Order) {
         const orderRef = collection(db, "Orders");
         const orderDoc = doc(orderRef, order.getOrderId());
@@ -22,7 +26,10 @@ export class setters {
         });
     }
 
-    // Add a ticket to the database
+    /*
+    pushTicket takes a ticket object and pushes it to the database
+    Ticket object is defined in objects/ticket.tsx
+    */
     static async pushTicket(ticket: Ticket) {
         const ticketRef = collection(db, "Tickets");
         const ticketDoc = doc(ticketRef, ticket.getTicketId());
@@ -36,4 +43,45 @@ export class setters {
             ticketTotal: ticket.getTicketTotal(),
         });
     }
+
+    /* 
+    pushRestaurant takes a restaurant object and pushes it to the database
+    Restaurant object is defined in objects/restaurant.tsx
+    */
+
+    static async pushRestaurant(restaurant: Restaurant) {
+        const restaurantRef = collection(db, "Restaurants");
+        const restaurantDoc = doc(restaurantRef, restaurant.getRestaurantId());
+        await setDoc(restaurantDoc, {
+            restaurantId: restaurant.getRestaurantId(),
+            restaurantName: restaurant.getRestaurantName(),
+            restaurantAddress: restaurant.getRestaurantAddress(),
+            restaurantCity: restaurant.getRestaurantCity(),
+            restaurantState: restaurant.getRestaurantState(),
+            restaurantZip: restaurant.getRestaurantZip(),
+            restaurantDescription: restaurant.getRestaurantDescription(),
+            restaurantPhone: restaurant.getRestaurantPhone(),
+            restaurantEmail: restaurant.getRestaurantEmail()
+        });
+    }
+
+    /*
+    pushItem takes an item object and pushes it to the database
+    Item object is defined in objects/menuItem.tsx
+    */
+    static async pushItem(item: Item) {
+        const itemRef = collection(db, "Items");
+        const itemDoc = doc(itemRef, item.getItemId());
+        await setDoc(itemDoc, {
+            itemName: item.getItemName(),
+            itemId: item.getItemId(),
+            itemDescription: item.getItemDescription(),
+            itemPrice: item.getItemPrice(),
+            itemQuantity: item.getItemQuantity(),
+            itemCategory: item.getItemCategory(),
+            restaurantId: item.getRestaurantId(),
+            
+        });
+    }
+
 }

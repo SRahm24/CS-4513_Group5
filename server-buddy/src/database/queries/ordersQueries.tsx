@@ -1,13 +1,40 @@
-import { collection, getDocs, getDocsFromServer, query, where, QueryDocumentSnapshot, DocumentData, or, } from "firebase/firestore";
+import { collection, getDocsFromServer, query, where, QueryDocumentSnapshot, DocumentData, } from "firebase/firestore";
 import { db } from "../firebase";
 import { Order } from "../../objects/order";
 
 const orderRef = collection(db, "Orders")
 
 export class OrdersQueries {
-
+    /*
+    Returns all orders in the database
+    */
     getAllOrders = async() => {
         const q = query(orderRef)
+        const result: QueryDocumentSnapshot<DocumentData>[] = [];
+        (await getDocsFromServer(q)).forEach((doc) => {
+        result.push(doc);
+            });
+        result.map((doc) => doc.data());
+        const orders: Order[] = [];
+        for (let i = 0; i < result.length; i++) {
+            orders.push(new Order(
+                result[i].get("orderId"),
+                result[i].get("ticketId"),
+                result[i].get("employeeId"),
+                result[i].get("tableId"),
+                result[i].get("restaurantId"),
+                result[i].get("orderDateTime"),
+                result[i].get("orderStatus"),
+                result[i].get("menuItems")));
+        }
+        // console.log(orders);
+        return orders;
+    }
+    /*
+    Returns all orders "In Progress" for the kitchen view
+    */
+    getKitchenOrders = async() => {
+        const q = query(orderRef, where("orderStatus", "==", "In Progress"));
         const result: QueryDocumentSnapshot<DocumentData>[] = [];
         (await getDocsFromServer(q)).forEach((doc) => {
         result.push(doc);
@@ -17,16 +44,43 @@ export class OrdersQueries {
         const orders: Order[] = [];
         for (let i = 0; i < result.length; i++) {
             orders.push(new Order(
-                result[i].data().orderId,
-                result[i].data().ticketId, 
-                result[i].data().employeeId, 
-                result[i].data().tableId, 
-                result[i].data().restaurantId, 
-                result[i].data().orderDateTime, 
-                result[i].data().orderStatus, 
-                result[i].data().menuItems));
+                result[i].get("orderId"),
+                result[i].get("ticketId"),
+                result[i].get("employeeId"),
+                result[i].get("tableId"),
+                result[i].get("restaurantId"),
+                result[i].get("orderDateTime"),
+                result[i].get("orderStatus"),
+                result[i].get("menuItems")));
         }
-        console.log(orders);
+        // console.log(orders);
+        return orders;
+    }
+
+    /*
+    Returns all orders associated with a ticketId
+    param: ticketId
+    */
+    getOrdersByTicketId = async (ticketId: string) => {
+        const q = query(orderRef, where("ticketId", "==", ticketId));
+        const result: QueryDocumentSnapshot<DocumentData>[] = [];
+        (await getDocsFromServer(q)).forEach((doc) => {
+        result.push(doc);
+            });
+        result.map((doc) => doc.data());
+        const orders: Order[] = [];
+        for (let i = 0; i < result.length; i++) {
+            orders.push(new Order(
+                result[i].get("orderId"),
+                result[i].get("ticketId"),
+                result[i].get("employeeId"),
+                result[i].get("tableId"),
+                result[i].get("restaurantId"),
+                result[i].get("orderDateTime"),
+                result[i].get("orderStatus"),
+                result[i].get("menuItems")));
+        }
+        // console.log(orders);
         return orders;
     }
 

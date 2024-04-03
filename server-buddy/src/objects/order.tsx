@@ -1,3 +1,5 @@
+import { serverTimestamp } from "firebase/firestore";
+
 /*
 Orders are used to build an order and send to the kitchen or bar.
 Orders are created by employees and are associated with a ticket.
@@ -13,7 +15,7 @@ export class Order {
     public restaurantId: string,
     public orderDateTime: string,
     // orderStatus: "Sent", "In Progress", "Ready", "Closed"
-    public orderStatus: string,
+    public orderStatus: string = "In progress",
     // menuItems is an array of itemId on the order
     public menuItems: string[],
     ){}
@@ -63,18 +65,6 @@ export class Order {
     }
     public setMenuItems(menuItems: []): void {
         this.menuItems = menuItems;
-    }
-    public toJSONObject(): any {
-        return {
-            orderId: this.orderId,
-            ticketId: this.ticketId,
-            employeeId: this.employeeId,
-            tableId: this.tableId,
-            restaurantId: this.restaurantId,
-            orderDateTime: this.orderDateTime,
-            orderStatus: this.orderStatus,
-            menuItems: this.menuItems
-        }
     }
     
 }

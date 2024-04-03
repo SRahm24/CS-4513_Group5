@@ -1,6 +1,6 @@
 export class Restaurant {
     constructor(
-    public restaurantID: string,
+    public restaurantId: string,
     public restaurantName: string,
     public restaurantAddress: string,
     public restaurantCity: string,
@@ -12,11 +12,11 @@ export class Restaurant {
     ){}
 
     // Getters and Setters
-    public getRestaurantID(): string {
-        return this.restaurantID;
+    public getRestaurantId(): string {
+        return this.restaurantId;
     }
-    public setRestaurantID(restaurantID: string): void {
-        this.restaurantID = restaurantID;
+    public setRestaurantID(restaurantId: string): void {
+        this.restaurantId = restaurantId;
     }
     public getRestaurantName(): string {
         return this.restaurantName;

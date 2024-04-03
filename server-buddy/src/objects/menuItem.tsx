@@ -12,10 +12,10 @@ export class Item {
     ) {}
 
     // Getters and Setters
-    public getName(): string {
+    public getItemName(): string {
         return this.name;
     }
-    public setName(name: string): void {
+    public setItemName(name: string): void {
         this.name = name;
     }
     public getItemId(): string {
@@ -24,28 +24,28 @@ export class Item {
     public setItemId(itemId: string): void {
         this.itemId = itemId;
     }
-    public getDescription(): string {
+    public getItemDescription(): string {
         return this.description;
     }
-    public setDescription(description: string): void {
+    public setItemDescription(description: string): void {
         this.description = description;
     }
-    public getPrice(): number {
+    public getItemPrice(): number {
         return this.price;
     }
-    public setPrice(price: number): void {
+    public setItemPrice(price: number): void {
         this.price = price;
     }
-    public getQuantity(): number {
+    public getItemQuantity(): number {
         return this.quantity;
     }
-    public setQuantity(quantity: number): void {
+    public setItemQuantity(quantity: number): void {
         this.quantity = quantity;
     }
-    public getCategory(): string {
+    public getItemCategory(): string {
         return this.category;
     }
-    public setCategory(category: string): void {
+    public setItemCategory(category: string): void {
         this.category = category;
     }
     public getRestaurantId(): string {
