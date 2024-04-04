@@ -423,7 +423,8 @@ function CollapsibleTable() {
                       });
 
                       manager.addTicket(name, "Open", itemArray);
-                      manager.getAllTicketData().then(ticketData => setRows(ticketData));
+                      setTimeout(() => {manager.getAllTicketData().then(ticketData => setRows(ticketData))}, 1000);
+                      
                       handleCloseItemTable();
                       setOpenOrder(false);
                       setName("");

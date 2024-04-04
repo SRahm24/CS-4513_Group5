@@ -76,7 +76,7 @@ export class TicketManager{
             let tickId = ticket.ticketId;
             let tickName = ticket.ticketName;
             let tickStatus = ticket.ticketStatus;
-            let date: Date = ticket.ticketTime.toDate();
+            let date = ticket.ticketTime.toDate();
             let hours: String = (date.getHours() % 12).toString();
             let minutes: String = date.getMinutes().toString();
             if (date.getMinutes() < 10){
