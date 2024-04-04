@@ -17,7 +17,6 @@ import Stack from '@mui/material/Stack';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -28,16 +27,15 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { MenuAndItemsQueries } from '../database/queries/menuAndItemsQueries';
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
-import { setters } from '../database/setters/setters';
-import { Order } from '../objects/order';
-import { Item } from '../objects/menuItem';
+import { DocumentData } from 'firebase/firestore';
 import { TicketManager } from './TicketManager';
+
 
 const manager: TicketManager = new TicketManager();
 
 let TicketId: number = 0;
-const rows: any[] = [];
+//let rows: any[] = manager.getAllTicketData();
+
 
 function onClickCheckout(row: ReturnType<typeof createData>){
 
@@ -163,7 +161,11 @@ function createData(
   }
   
 function CollapsibleTable() {
-    console.log(entireMenu);
+
+    const [rows, setRows]: any[] = React.useState([]);
+    React.useState(() => {
+      manager.getAllTicketData().then(ticketData => setRows(ticketData));
+    })
 
     let startMenu: DocumentData[] = [];
 
@@ -285,7 +287,7 @@ function CollapsibleTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {rows.map((row: any) => (
               <Row key={row.TicketId} row={row} />
             ))}
           </TableBody>
@@ -421,7 +423,7 @@ function CollapsibleTable() {
                       });
 
                       manager.addTicket(name, "Open", itemArray);
-                      
+                      manager.getAllTicketData().then(ticketData => setRows(ticketData));
                       handleCloseItemTable();
                       setOpenOrder(false);
                       setName("");
