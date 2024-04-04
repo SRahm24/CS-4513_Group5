@@ -1,5 +1,5 @@
 
-import { collection, doc, getDocs, query, setDoc, where, serverTimestamp } from "firebase/firestore";
+import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase";
 import { Order } from "../../objects/order";
 import { Restaurant } from "../../objects/restaurant";
@@ -9,6 +9,7 @@ import { Item } from "../../objects/menuItem";
 export class setters {
     /*
     pushOrder takes an order object and pushes it to the database
+    orderDateTime is a timestamp from the firebase server
     Order object is defined in objects/order.tsx
      */
     static async pushOrder(order: Order) {
@@ -28,6 +29,7 @@ export class setters {
 
     /*
     pushTicket takes a ticket object and pushes it to the database
+    ticketTime is a timestamp from the firebase server
     Ticket object is defined in objects/ticket.tsx
     */
     static async pushTicket(ticket: Ticket) {
@@ -36,10 +38,9 @@ export class setters {
         await setDoc(ticketDoc, {
             ticketId: ticket.getTicketId(),
             tableId: ticket.getTableId(),
-            orderIds: ticket.getOrderIds(),
             restaurantId: ticket.getRestaurantId(),
             ticketStatus: ticket.getTicketStatus(),
-            ticketTime: serverTimestamp(),
+            ticketDateTime: serverTimestamp(),
             ticketTotal: ticket.getTicketTotal(),
         });
     }
