@@ -76,9 +76,21 @@ export class TicketManager{
             let tickId = ticket.ticketId;
             let tickName = ticket.ticketName;
             let tickStatus = ticket.ticketStatus;
-            let ticketTime = "5:00";
+            let date: Date = ticket.ticketTime.toDate();
+            let hours: String = (date.getHours() % 12).toString();
+            let minutes: String = date.getMinutes().toString();
+            if (date.getMinutes() < 10){
+              minutes = "0" + date.getMinutes();
+            }
+            let ticketTime = hours + ":" + minutes;
+            if(date.getHours() < 12){
+                ticketTime += " AM";
+            }
+            else{
+                ticketTime += " PM";
+            }
 
-            let ticketDate = "April 8, 2024";
+            let ticketDate = (date.getMonth() + 1) + "/" + date.getDay() + "/" + date.getFullYear();
 
             let currentOrder: {itemId: number, item: string, type: string, quantity: number, status: string, price: number}[] = [];
             orders.forEach(order => {
