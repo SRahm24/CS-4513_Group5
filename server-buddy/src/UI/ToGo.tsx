@@ -61,8 +61,8 @@ MenuAndItemsQueries.getAllMenus().then(menus => {
 });
 
 // Sample order to test
-const sampleOrder: Order = new Order(undefined, "tick_1", "emp_1", -1, "rest_1", " " , "In progress", ["Item_3", "Item_5"]);
-const sampleOrder2: Order = new Order(undefined, "tick_1", "emp_1", -1, "rest_1", " " , "In progress", ["Item_4", "Item_6"]);
+const sampleOrder: Order = new Order(" ", "tick_1", "emp_1", -1, "rest_1", " " , "In progress", ["Item_3", "Item_5"]);
+const sampleOrder2: Order = new Order(" ", "tick_1", "emp_1", -1, "rest_1", " " , "In progress", ["Item_4", "Item_6"]);
 setters.pushOrder(sampleOrder);
 setters.pushOrder(sampleOrder2);
 

@@ -5,8 +5,9 @@ import { Order } from "../../objects/order";
 const orderRef = collection(db, "Orders")
 
 export class OrdersQueries {
-    /*
-    Returns all orders in the database
+    /**
+    * Retrieves all orders from the database.
+    * @returns An array of Order objects representing the orders.
     */
     getAllOrders = async() => {
         const q = query(orderRef)

@@ -4,7 +4,7 @@ Tickets are created when a table is seated. They are used to keep track of order
 export class Ticket {
     constructor(
     // ticketId is used to keep track of the ticket.
-    public ticketId: string = "tick_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+    public ticketId: string,
     // orderIds are used to keep track of all orders associated with the ticket.
     // ticketId is tracked in the order object.
     // public orderIds: string[],

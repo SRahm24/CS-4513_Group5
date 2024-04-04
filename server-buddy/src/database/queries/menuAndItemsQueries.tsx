@@ -5,6 +5,10 @@ import { Menu } from "../../objects/menu";
 const menuRef = collection(db, "Menu");
 
 export class MenuAndItemsQueries {
+    /**
+     * Retrieves all menus from the database.
+     * @returns An array of Menu objects representing the menus.
+    */
     static getAllMenus = async () => {
         const q = query(menuRef)
         const result: QueryDocumentSnapshot<DocumentData>[] = [];

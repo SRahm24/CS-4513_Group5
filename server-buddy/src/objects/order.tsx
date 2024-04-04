@@ -7,7 +7,7 @@ Orders can be dine-in(Table number) or to-go(Table -1).
 */
 export class Order {
     constructor(
-    public orderId: string = "ord_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+    public orderId: string,
     public ticketId: string,
     public employeeId: string,
     // If -1 Togo order, else dine in
