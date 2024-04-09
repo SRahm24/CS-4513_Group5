@@ -13,7 +13,7 @@ export class Ticket {
     // restaurantId is used to keep track of the restaurant associated with the ticket.
     public restaurantId: string,
     // ticketStatus: "Open", "Paid", "Void"
-    public ticketStatus: string = "Open",
+    public ticketStatus: string,
     // ticketTime is the time the ticket was created and set to fireStore serverTimestamp.
     public ticketDateTime: string,
     public subTotal: number,

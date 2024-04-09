@@ -15,7 +15,7 @@ export class Order {
     public restaurantId: string,
     public orderDateTime: string,
     // orderStatus: "Sent", "In Progress", "Ready", "Closed"
-    public orderStatus: string = "In progress",
+    public orderStatus: string,
     // menuItems is an array of itemId on the order
     public menuItems: string[],
     ){}
