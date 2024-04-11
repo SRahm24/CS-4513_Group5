@@ -9,7 +9,7 @@ export class OrdersQueries {
     * Retrieves all orders from the database.
     * @returns An array of Order objects representing the orders.
     */
-    getAllOrders = async() => {
+    static getAllOrders = async() => {
         const q = query(orderRef)
         const result: QueryDocumentSnapshot<DocumentData>[] = [];
         (await getDocsFromServer(q)).forEach((doc) => {
@@ -34,7 +34,7 @@ export class OrdersQueries {
     /*
     Returns all orders "In Progress" for the kitchen view
     */
-    getKitchenOrders = async() => {
+    static getKitchenOrders = async() => {
         const q = query(orderRef, where("orderStatus", "==", "In Progress"));
         const result: QueryDocumentSnapshot<DocumentData>[] = [];
         (await getDocsFromServer(q)).forEach((doc) => {
@@ -62,7 +62,7 @@ export class OrdersQueries {
     Returns all orders associated with a ticketId
     param: ticketId
     */
-    getOrdersByTicketId = async (ticketId: string) => {
+    static getOrdersByTicketId = async (ticketId: string) => {
         const q = query(orderRef, where("ticketId", "==", ticketId));
         const result: QueryDocumentSnapshot<DocumentData>[] = [];
         (await getDocsFromServer(q)).forEach((doc) => {
