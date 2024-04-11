@@ -1,10 +1,10 @@
 import { DocumentData } from "firebase/firestore";
-import { getAllOrders, getOrderSize } from "../database/queries/ordersQueries";
+import { OrdersQueries } from "../database/queries/ordersQueries";
 import { Ticket } from "../objects/ticket";
 import { Item } from "../objects/menuItem";
 import { Order } from "../objects/order";
 import { setters } from "../database/setters/setters";
-import { getAllTickets } from "../database/queries/ticketQueries";
+import { TicketsQueries } from "../database/queries/ticketQueries";
 import { MenuAndItemsQueries } from "../database/queries/menuAndItemsQueries";
 
 export class TicketManager{
@@ -52,7 +52,7 @@ export class TicketManager{
 
         let dateString: string = (date.getMonth()+1).toString() + "/" + (date.getDate()).toString();
         this.ticketID += 1;
-        const newTicket: Ticket = new Ticket(this.ticketID.toString(), orderIDArray, name, "", status, dateString, ticketPrice);
+        const newTicket: Ticket = new Ticket(this.ticketID.toString(), name, "", status, dateString, ticketPrice, 0, 0, 0);
         const newOrder: Order = new Order((this.orderID).toString(), this.ticketID.toString(), "", -1, "", dateString, "In Progress", orderNameArray);
         
         setters.pushTicket(newTicket);
@@ -65,8 +65,8 @@ export class TicketManager{
             entireMenu = menus;
         });
 
-        let tickets: DocumentData[] = await getAllTickets();
-        let orders: DocumentData[] = await getAllOrders();
+        let tickets: Ticket[] = await TicketsQueries.getAllTickets();
+        let orders: Order[] = await OrdersQueries.getAllOrders();
         this.orderID = orders.length;
 
         let allTicketData:{TicketId: number, Name: String, Time: String, Date: String, Status: String, order: any[]}[] = [];
@@ -76,7 +76,7 @@ export class TicketManager{
             let tickId = ticket.ticketId;
             let tickName = ticket.ticketName;
             let tickStatus = ticket.ticketStatus;
-            let date = ticket.ticketTime.toDate();
+            let date = ticket.ticketDateTime.toDate();
             let hours: String = (date.getHours() % 12).toString();
             let minutes: String = date.getMinutes().toString();
             if (date.getMinutes() < 10){
