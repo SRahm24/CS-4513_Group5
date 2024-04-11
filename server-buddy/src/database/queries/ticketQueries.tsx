@@ -13,7 +13,7 @@ export class TicketsQueries {
      * Retrieves all orders from the database.
      * @returns An array of Ticket objects representing the orders.
      */
-    getAllTickets = async() => {
+    static getAllTickets = async() => {
         const q = query(orderRef);
         const result: QueryDocumentSnapshot<DocumentData>[] = [];
         (await getDocsFromServer(q)).forEach((doc) => {
@@ -35,7 +35,7 @@ export class TicketsQueries {
         }
         return ticket;
     }
-    getAllOpenTickets = async() => {
+    static getAllOpenTickets = async() => {
         const q = query(orderRef, where("ticketStatus", "==", "Open"));
         const result: QueryDocumentSnapshot<DocumentData>[] = [];
         (await getDocsFromServer(q)).forEach((doc) => {

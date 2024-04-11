@@ -1,5 +1,6 @@
 import { collection, getDocsFromServer, query, where, QueryDocumentSnapshot, DocumentData, } from "firebase/firestore";
 import { db } from "../firebase";
+import { Order } from "../../objects/order";
 
 const orderRef = collection(db, "Orders")
 
@@ -8,7 +9,7 @@ export class OrdersQueries {
     * Retrieves all orders from the database.
     * @returns An array of Order objects representing the orders.
     */
-    getAllOrders = async() => {
+    static getAllOrders = async() => {
         const q = query(orderRef)
         const result: QueryDocumentSnapshot<DocumentData>[] = [];
         (await getDocsFromServer(q)).forEach((doc) => {
