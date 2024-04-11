@@ -5,6 +5,8 @@ export class Ticket {
     
 
     constructor(
+    // ticketName is used to keep track of names for to-go orders.
+    public ticketName: string,
     // ticketId is used to keep track of the ticket.
     public ticketId: string,
     // tableId is used to keep track of the table associated with the ticket. -1 is to-go.
@@ -22,6 +24,12 @@ export class Ticket {
     ){}
 
     // Getters and Setters
+    public getTicketName(): string {
+        return this.ticketName;
+    }
+    public setTicketName(ticketName: string): void {
+        this.ticketName = ticketName;
+    }
     public getTicketId(): string {
         return this.ticketId;
     }

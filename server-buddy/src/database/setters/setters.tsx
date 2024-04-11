@@ -49,6 +49,7 @@ export class setters {
         const ticketDoc = doc(ticketRef);
         const uniqueId = "tick_" + (Date.now() % 1000) + "__" + UniqueId.generateUniqueId(ticket.restaurantId);
         await setDoc(ticketDoc, {
+            ticketName: ticket.getTicketName(),
             ticketId: uniqueId,
             tableId: ticket.getTableId(),
             restaurantId: ticket.getRestaurantId(),

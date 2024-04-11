@@ -23,6 +23,7 @@ export class TicketsQueries {
         const ticket: Ticket[] = [];
         for (let i = 0; i < result.length; i++) {
             ticket.push(new Ticket(
+                result[i].get("ticketName"),
                 result[i].get("ticketId"),
                 result[i].get("tableId"),
                 result[i].get("restaurantId"),
@@ -45,6 +46,7 @@ export class TicketsQueries {
         const ticket: Ticket[] = [];
         for (let i = 0; i < result.length; i++) {
             ticket.push(new Ticket(
+                result[i].get("ticketName"),
                 result[i].get("ticketId"),
                 result[i].get("tableId"),
                 result[i].get("restaurantId"),
