@@ -1,6 +1,5 @@
 import { collection, getDocsFromServer, query, where, QueryDocumentSnapshot, DocumentData, } from "firebase/firestore";
 import { db } from "../firebase";
-import { Order } from "../../objects/order";
 
 const orderRef = collection(db, "Orders")
 

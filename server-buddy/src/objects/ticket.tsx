@@ -2,6 +2,8 @@
 Tickets are created when a table is seated. They are used to keep track of orders and payments.
 */
 export class Ticket {
+
+
     constructor(
     // ticketId is used to keep track of the ticket.
     public ticketId: string,
@@ -9,7 +11,7 @@ export class Ticket {
     // ticketId is tracked in the order object.
     // public orderIds: string[],
     // tableId is used to keep track of the table associated with the ticket. -1 is to-go.
-    public tableId: number,
+    public ticketName: string,
     // restaurantId is used to keep track of the restaurant associated with the ticket.
     public restaurantId: string,
     // ticketStatus: "Open", "Paid", "Void"
@@ -32,8 +34,8 @@ export class Ticket {
     public getTableId(): number {
         return this.tableId;
     }
-    public setTableId(tableId: number): void {
-        this.tableId = tableId;
+    public setTicketName(ticketName: string): void {
+        this.ticketName = ticketName;
     }
     public getRestaurantId(): string {
         return this.restaurantId;

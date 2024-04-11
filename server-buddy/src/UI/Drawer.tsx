@@ -199,18 +199,7 @@ export default function PersistentDrawerLeft() {
 
           <CssBaseline />
           <Container maxWidth={false}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                <Tab label="Table View" {...a11yProps(0)} />
-                <Tab label="To-Go Orders" {...a11yProps(1)} />
-              </Tabs>
-            </Box>
-            <CustomTabPanel value={value} index={0}>
-              <TableLayout/>
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-              <ToGo/>
-            </CustomTabPanel>
+            <ToGo/>
           </Container>
 
         
