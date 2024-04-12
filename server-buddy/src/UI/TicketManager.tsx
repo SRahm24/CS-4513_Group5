@@ -1,4 +1,4 @@
-import { DocumentData } from "firebase/firestore";
+import { DocumentData, Timestamp } from "firebase/firestore";
 import { OrdersQueries } from "../database/queries/ordersQueries";
 import { Ticket } from "../objects/ticket";
 import { Item } from "../objects/menuItem";
@@ -21,9 +21,9 @@ export class TicketManager{
         _items: string[]){
             let date = new Date();
 
-            let dateString: string = (date.getMonth()+1).toString() + "/" + (date.getDate()).toString();
+            let timestamp: Timestamp = new Timestamp(date.getSeconds(), date.getSeconds());
 
-            let order: Order = new Order("", _ticketId, _employeeId, _tableNum, _restaurantId, dateString, _status, _items);
+            let order: Order = new Order("", _ticketId, _employeeId, _tableNum, _restaurantId, timestamp, _status, _items);
             setters.pushOrder(order);
     }
 
@@ -39,12 +39,11 @@ export class TicketManager{
         });
 
         let date = new Date();
-
-        let dateString: string = (date.getMonth()+1).toString() + "/" + (date.getDate()).toString();
         
-        const newTicket: Ticket = new Ticket(name, "", "-1", "", status, dateString, ticketPrice, 0, 0, 0);
+        let timestamp: Timestamp = new Timestamp(date.getSeconds(), date.getSeconds());
+        const newTicket: Ticket = new Ticket(name, "", "-1", "", status, timestamp, ticketPrice, 0, 0, 0);
         setters.pushTicket(newTicket).then(id => {
-            const newOrder: Order = new Order("", id.toString(), "", -1, "", dateString, "In Progress", orderNameArray);
+            const newOrder: Order = new Order("", id.toString(), "", -1, "", timestamp, "In Progress", orderNameArray);
             setters.pushOrder(newOrder);
         })
     }
@@ -61,14 +60,17 @@ export class TicketManager{
         let allTicketData:{TicketId: String , Name: String, Time: String, Date: String, Status: String, order: any[]}[] = [];
 
 
-        tickets.forEach(ticket => {
+        tickets.forEach(async ticket => {
             let tickId = ticket.ticketId;
             let tickName = ticket.ticketName;
             let tickStatus = ticket.ticketStatus;
-            let date = new Date(ticket.ticketDateTime);
+            let date = await ticket.ticketDateTime.toDate();
             console.log(ticket.ticketDateTime);
             let hours: String = (date.getHours() % 12).toString();
             let minutes: String = date.getMinutes().toString();
+            if(hours == "0"){
+                hours = "12";
+            }
             if (date.getMinutes() < 10){
               minutes = "0" + date.getMinutes();
             }
@@ -81,7 +83,7 @@ export class TicketManager{
             }
 
             //let ticketDate = (date.getMonth() + 1) + "/" + date.getDay() + "/" + date.getFullYear();
-            let ticketDate = date.toString();
+            let ticketDate: String = (date.getMonth() + 1).toString() + "/" + (date.getDay()).toString() + "/" + (date.getFullYear()).toString();
 
             let currentOrder: {itemId: number, item: string, type: string, quantity: number, status: string, price: number}[] = [];
             orders.forEach(order => {
@@ -124,6 +126,57 @@ export class TicketManager{
 
         return allTicketData;
         
+    }
+
+    async getOrdersByTicket(ticketId: string){
+
+        let orders = await OrdersQueries.getOrdersByTicketId(ticketId);
+        let formattedOrders: any[] = [];
+        let itemId = 0;
+        orders.forEach(order => {
+            (order.getMenuItems()).forEach(async item => {
+                itemId++;
+                let itemInfo = this.getItemInfo(item);
+                formattedOrders.push({itemId: itemId, item: item, type: (await itemInfo).type, quantity: 1, status: order.getOrderStatus(), price: (await itemInfo).price})
+            });
+        });
+
+        for(let a = 0; a < formattedOrders.length; a++){
+            let currentItem = formattedOrders[a];
+            for(let b = a + 1; a < formattedOrders.length - 1; b++){
+                let item = formattedOrders[b];
+                if(currentItem.item == item.item){
+                    currentItem.quantity++;
+                    for(let c = b + 1; c < formattedOrders.length - 1; c++){
+                        formattedOrders[b - 1] = formattedOrders[b];
+                    }
+                    formattedOrders.pop();
+                }
+            }
+            currentItem.price = currentItem.price * currentItem.quantity;
+            formattedOrders[a] = currentItem;
+        }
+        console.log(formattedOrders);
+        return formattedOrders;
+    }
+
+    async getItemInfo(item: string){
+        let entireMenu: DocumentData[] = [];
+        MenuAndItemsQueries.getAllMenus().then(menus => {
+            entireMenu = menus;
+        });
+
+        let type = "";
+        let price = 0;
+
+        entireMenu.forEach(menuItem => {
+            if(menuItem.name == item){
+                type = menuItem.type;
+                price = menuItem.price;
+            }
+        });
+
+        return {type, price};
     }
 
 }

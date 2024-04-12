@@ -1,4 +1,4 @@
-import { serverTimestamp } from "firebase/firestore";
+import { Timestamp, serverTimestamp } from "firebase/firestore";
 
 /*
 Orders are used to build an order and send to the kitchen or bar.
@@ -13,7 +13,7 @@ export class Order {
     // If -1 Togo order, else dine in
     public tableId: number,
     public restaurantId: string,
-    public orderDateTime: string,
+    public orderDateTime: Timestamp,
     // orderStatus: "Sent", "In Progress", "Ready", "Closed"
     public orderStatus: string,
     // menuItems is an array of itemId on the order
@@ -51,7 +51,7 @@ export class Order {
     public setRestaurantId(restaurantId: string): void {
         this.restaurantId = restaurantId;
     }
-    public getOrderDateTime(): string {
+    public getOrderDateTime(): Timestamp {
         return this.orderDateTime;
     }
     public getOrderStatus(): string {
