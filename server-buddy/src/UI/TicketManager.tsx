@@ -8,8 +8,6 @@ import { TicketsQueries } from "../database/queries/ticketQueries";
 import { MenuAndItemsQueries } from "../database/queries/menuAndItemsQueries";
 
 export class TicketManager{
-    ticketID: number = 0;
-    orderID: number = 0;
     restauarantID: number = 0;
 
     constructor() {
@@ -21,24 +19,16 @@ export class TicketManager{
         _restaurantId: string,
         _status: string,
         _items: string[]){
-            let date = new Date(); 
-            let hours: String = (date.getHours() % 12).toString();
-            let minutes: String = date.getMinutes().toString();
-            if (date.getMinutes() < 10){
-              minutes = "0" + date.getMinutes();
-            }
+            let date = new Date();
 
             let dateString: string = (date.getMonth()+1).toString() + "/" + (date.getDate()).toString();
 
-            this.orderID += 1;
-            let order: Order = new Order((this.orderID).toString(), _ticketId, _employeeId, _tableNum, _restaurantId, dateString, _status, _items);
+            let order: Order = new Order("", _ticketId, _employeeId, _tableNum, _restaurantId, dateString, _status, _items);
             setters.pushOrder(order);
     }
 
     addTicket(name: string, status: string, itemPrices: {itemName: string, price: number}[]){
-        let orderIDArray: string[] = [];
-        this.orderID += 1;
-        orderIDArray.push(this.orderID.toString());
+        
         let orderNameArray: string[] = [];
         let ticketPrice: number = 0;
         let i = 0;
@@ -51,12 +41,12 @@ export class TicketManager{
         let date = new Date();
 
         let dateString: string = (date.getMonth()+1).toString() + "/" + (date.getDate()).toString();
-        this.ticketID += 1;
-        const newTicket: Ticket = new Ticket(this.ticketID.toString(), name, "", status, dateString, ticketPrice, 0, 0, 0);
-        const newOrder: Order = new Order((this.orderID).toString(), this.ticketID.toString(), "", -1, "", dateString, "In Progress", orderNameArray);
         
-        setters.pushTicket(newTicket);
-        setters.pushOrder(newOrder);
+        const newTicket: Ticket = new Ticket(name, "", "-1", "", status, dateString, ticketPrice, 0, 0, 0);
+        setters.pushTicket(newTicket).then(id => {
+            const newOrder: Order = new Order("", id.toString(), "", -1, "", dateString, "In Progress", orderNameArray);
+            setters.pushOrder(newOrder);
+        })
     }
 
     async getAllTicketData(){
@@ -67,16 +57,16 @@ export class TicketManager{
 
         let tickets: Ticket[] = await TicketsQueries.getAllTickets();
         let orders: Order[] = await OrdersQueries.getAllOrders();
-        this.orderID = orders.length;
 
-        let allTicketData:{TicketId: number, Name: String, Time: String, Date: String, Status: String, order: any[]}[] = [];
+        let allTicketData:{TicketId: String , Name: String, Time: String, Date: String, Status: String, order: any[]}[] = [];
 
 
         tickets.forEach(ticket => {
             let tickId = ticket.ticketId;
             let tickName = ticket.ticketName;
             let tickStatus = ticket.ticketStatus;
-            let date = ticket.ticketDateTime.toDate();
+            let date = new Date(ticket.ticketDateTime);
+            console.log(ticket.ticketDateTime);
             let hours: String = (date.getHours() % 12).toString();
             let minutes: String = date.getMinutes().toString();
             if (date.getMinutes() < 10){
@@ -90,7 +80,8 @@ export class TicketManager{
                 ticketTime += " PM";
             }
 
-            let ticketDate = (date.getMonth() + 1) + "/" + date.getDay() + "/" + date.getFullYear();
+            //let ticketDate = (date.getMonth() + 1) + "/" + date.getDay() + "/" + date.getFullYear();
+            let ticketDate = date.toString();
 
             let currentOrder: {itemId: number, item: string, type: string, quantity: number, status: string, price: number}[] = [];
             orders.forEach(order => {
@@ -130,9 +121,6 @@ export class TicketManager{
 
             allTicketData.push({TicketId: tickId, Name: tickName, Time: ticketTime, Date: ticketDate, Status: tickStatus, order: currentOrder});
         });
-
-        this.ticketID = allTicketData.length;
-
 
         return allTicketData;
         
