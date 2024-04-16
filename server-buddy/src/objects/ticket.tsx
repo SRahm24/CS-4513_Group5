@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 /*
 Tickets are created when a table is seated. They are used to keep track of orders and payments.
 */
@@ -16,7 +18,7 @@ export class Ticket {
     // ticketStatus: "Open", "Paid", "Void"
     public ticketStatus: string,
     // ticketTime is the time the ticket was created and set to fireStore serverTimestamp.
-    public ticketDateTime: string,
+    public ticketDateTime: Timestamp,
     public subTotal: number,
     public tip: number,
     public tax: number,
@@ -51,10 +53,10 @@ export class Ticket {
     public setTicketStatus(ticketStatus: string): void {
         this.ticketStatus = ticketStatus;
     }
-    public getTicketDateTime(): string {
+    public getTicketDateTime(): Timestamp {
         return this.ticketDateTime;
     }
-    public setTicketDateTime(ticketDateTime: string): void {
+    public setTicketDateTime(ticketDateTime: Timestamp): void {
         this.ticketDateTime = ticketDateTime;
     }
     public getSubTotal(): number {
