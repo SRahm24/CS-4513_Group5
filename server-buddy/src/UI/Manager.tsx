@@ -18,13 +18,18 @@ import { DocumentData } from 'firebase/firestore';
 import { set } from 'firebase/database';
 import { Item } from '../objects/menuItem';
 import { setters } from '../database/setters/setters';
+import { updateDB } from '../database/setters/updateDB';
+
+let updateMenu = true;
 
 function createData(
+  id: string,
   name: string,
   type: string,
   price: number,
 ) {
   return {
+    id,
     name,
     type,
     price
@@ -58,7 +63,9 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
                 <Stack spacing={2} p={2}>
-                    <Button variant="contained">Remove</Button>
+                    <Button variant="contained" onClick={() => {
+                      updateDB.deleteItem(new Item("", row.id, "", 0, 0, "", ""));
+                    }}>Remove</Button>
                 </Stack>
             </Box>
           </Collapse>
@@ -69,11 +76,11 @@ function Row(props: { row: ReturnType<typeof createData> }) {
 }
 
 async function getMenu(){
-    const menu: {name: string, type: string, price: number}[] = [];
+    const menu: {id: string, name: string, type: string, price: number}[] = [];
     let entireMenu: DocumentData[] = await MenuAndItemsQueries.getAllMenus();;
     entireMenu.forEach(menuItem => {
-        console.log(createData(menuItem.name, menuItem.type, menuItem.price))
-        menu.push(createData(menuItem.itemName, menuItem.itemCategory, menuItem.itemPrice));
+        console.log(createData(menuItem.itemId, menuItem.name, menuItem.type, menuItem.price))
+        menu.push(createData(menuItem.itemId, menuItem.itemName, menuItem.itemCategory, menuItem.itemPrice));
     });
     return menu;
 }
@@ -82,8 +89,12 @@ export default function ManagerMenuTable() {
     const [menu, setMenu]: any[] = React.useState([]);
     const [menuChange, setMenuChange] = React.useState(true);
     React.useEffect(() => {
-      getMenu().then(data => setMenu(data));
-      setMenuChange(false);
+      if(menuChange){
+        getMenu().then(data => setMenu(data));
+        setMenuChange(false);
+        console.log("Reading from DB");
+        updateMenu = false;
+      }
     }, [menuChange]);
 
     const [name, setName] = React.useState('');
@@ -114,7 +125,7 @@ export default function ManagerMenuTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {menu.map((row: {name: string, type: string, price: number}) => (
+          {menu.map((row: {id: string, name: string, type: string, price: number}) => (
             <Row key={row.name} row={row} />
           ))}
         </TableBody>
