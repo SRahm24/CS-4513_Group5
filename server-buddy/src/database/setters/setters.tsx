@@ -91,16 +91,31 @@ export class setters {
     Item object is defined in objects/menuItem.tsx
     */
     static async pushItem(item: Item) {
-        const itemRef = collection(db, "Items");
-        const itemDoc = doc(itemRef);
-        const uniqueId = "item_" + UniqueId.generateUniqueId(item.getItemName());
+        const itemRef = collection(db, "Menu");
+        let uniqueId = "item_";
+
+        if(item.getItemType() == "App"){
+            uniqueId += "A_";
+        }
+        else if(item.getItemType() == "Entree"){
+            uniqueId += "E_";
+        }
+        else if(item.getItemType() == "Dessert"){
+            uniqueId += "D_";
+        }
+        else{
+            uniqueId += "B_";
+        }
+
+        uniqueId += UniqueId.generateUniqueId(item.getItemName());
+        const itemDoc = doc(itemRef, uniqueId);
         await setDoc(itemDoc, {
             itemName: item.getItemName(),
             itemId: uniqueId,
             itemDescription: item.getItemDescription(),
             itemPrice: item.getItemPrice(),
             itemQuantity: item.getItemQuantity(),
-            itemCategory: item.getItemCategory(),
+            itemCategory: item.getItemType(),
             restaurantId: item.getRestaurantId(),
             
         });

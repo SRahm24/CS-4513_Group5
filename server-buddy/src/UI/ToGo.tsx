@@ -502,7 +502,7 @@ function createData(
   
 function CollapsibleTable() {
     const [rows, setRows]: any[] = React.useState([]);
-    React.useState(() => {
+    React.useEffect(() => {
       manager.getAllTicketData().then(ticketData => setRows(ticketData));
     })
 
