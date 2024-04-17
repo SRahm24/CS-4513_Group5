@@ -1,12 +1,24 @@
-class Ticket {
+import { Timestamp } from "firebase/firestore";
+
+/*
+Tickets are created when a table is seated. They are used to keep track of orders and payments.
+*/
+export class Ticket {
+    
+
     constructor(
+    // ticketName is used to keep track of names for to-go orders.
+    public ticketName: string,
+    // ticketId is used to keep track of the ticket.
     public ticketId: string,
-    public orderIds: string[],
-    public tableId: number,
+    // tableId is used to keep track of the table associated with the ticket. -1 is to-go.
+    public tableId: string,
+    // restaurantId is used to keep track of the restaurant associated with the ticket.
     public restaurantId: string,
     // ticketStatus: "Open", "Paid", "Void"
-    public ticketStatus: string = "Open",
-    public ticketTime: string,
+    public ticketStatus: string,
+    // ticketTime is the time the ticket was created and set to fireStore serverTimestamp.
+    public ticketDateTime: Timestamp,
     public subTotal: number,
     public tip: number,
     public tax: number,
@@ -14,23 +26,20 @@ class Ticket {
     ){}
 
     // Getters and Setters
+    public getTicketName(): string {
+        return this.ticketName;
+    }
+    public setTicketName(ticketName: string): void {
+        this.ticketName = ticketName;
+    }
     public getTicketId(): string {
         return this.ticketId;
     }
     public setTicketId(ticketId: string): void {
         this.ticketId = ticketId;
     }
-    public getOrderIds(): string[] {
-        return this.orderIds;
-    }
-    public setOrderIds(orderIds: string[]): void {
-        this.orderIds = orderIds;
-    }
-    public getTableId(): number {
+    public getTableId(): string {
         return this.tableId;
-    }
-    public setTableId(tableId: number): void {
-        this.tableId = tableId;
     }
     public getRestaurantId(): string {
         return this.restaurantId;
@@ -44,11 +53,11 @@ class Ticket {
     public setTicketStatus(ticketStatus: string): void {
         this.ticketStatus = ticketStatus;
     }
-    public getTicketTime(): string {
-        return this.ticketTime;
+    public getTicketDateTime(): Timestamp {
+        return this.ticketDateTime;
     }
-    public setTicketTime(ticketTime: string): void {
-        this.ticketTime = ticketTime;
+    public setTicketDateTime(ticketDateTime: Timestamp): void {
+        this.ticketDateTime = ticketDateTime;
     }
     public getSubTotal(): number {
         return this.subTotal;
@@ -73,8 +82,5 @@ class Ticket {
     }
     public setTicketTotal(ticketTotal: number): void {
         this.ticketTotal = ticketTotal;
-    }
-    public addOrder(orderId: string): void {
-        this.orderIds.push(orderId);
     }
 }

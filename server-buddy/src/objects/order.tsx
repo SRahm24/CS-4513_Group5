@@ -1,4 +1,11 @@
-class Order {
+import { Timestamp, serverTimestamp } from "firebase/firestore";
+
+/*
+Orders are used to build an order and send to the kitchen or bar.
+Orders are created by employees and are associated with a ticket.
+Orders can be dine-in(Table number) or to-go(Table -1).
+*/
+export class Order {
     constructor(
     public orderId: string,
     public ticketId: string,
@@ -6,11 +13,11 @@ class Order {
     // If -1 Togo order, else dine in
     public tableId: number,
     public restaurantId: string,
-    public orderTime: string = new Date().getTime().toString(),
-    public orderDate: string = new Date().toLocaleDateString(),
+    public orderDateTime: Timestamp,
     // orderStatus: "Sent", "In Progress", "Ready", "Closed"
     public orderStatus: string,
-    public menuItems: MenuItem[],
+    // menuItems is an array of itemId on the order
+    public menuItems: string[],
     ){}
 
     // Getters and Setters
@@ -44,14 +51,8 @@ class Order {
     public setRestaurantId(restaurantId: string): void {
         this.restaurantId = restaurantId;
     }
-    public getOrderTime(): string {
-        return this.orderTime;
-    }
-    public getOrderDate(): string {
-        return this.orderDate;
-    }
-    public setOrderTime(orderTime: string): void {
-        this.orderTime = orderTime;
+    public getOrderDateTime(): Timestamp {
+        return this.orderDateTime;
     }
     public getOrderStatus(): string {
         return this.orderStatus;
@@ -59,24 +60,11 @@ class Order {
     public setOrderStatus(orderStatus: string): void {
         this.orderStatus = orderStatus;
     }
-    public getMenuItems(): MenuItem[] {
+    public getMenuItems(): string[] {
         return this.menuItems;
     }
-    public setMenuItems(menuItems: MenuItem[]): void {
+    public setMenuItems(menuItems: []): void {
         this.menuItems = menuItems;
-    }
-    public toJSONObject(): any {
-        return {
-            orderId: this.orderId,
-            ticketId: this.ticketId,
-            employeeId: this.employeeId,
-            tableId: this.tableId,
-            restaurantId: this.restaurantId,
-            orderTime: this.orderTime,
-            orderDate: this.orderDate,
-            orderStatus: this.orderStatus,
-            menuItems: this.menuItems
-        }
     }
     
 }
