@@ -6,6 +6,7 @@ import { Order } from "../objects/order";
 import { setters } from "../database/setters/setters";
 import { TicketsQueries } from "../database/queries/ticketQueries";
 import { MenuAndItemsQueries } from "../database/queries/menuAndItemsQueries";
+import { updateDB } from "../database/setters/updateDB";
 
 export class TicketManager{
     restauarantID: number = 0;
@@ -54,7 +55,7 @@ export class TicketManager{
             entireMenu = menus;
         });
 
-        let tickets: Ticket[] = await TicketsQueries.getAllTickets();
+        let tickets: Ticket[] = await TicketsQueries.getAllOpenTickets();
         let orders: Order[] = await OrdersQueries.getAllOrders();
 
         let allTicketData:{TicketId: String , Name: String, Time: String, Date: String, Status: String, order: any[]}[] = [];
@@ -179,4 +180,9 @@ export class TicketManager{
         return {type, price};
     }
 
+    async updateTicketStatusToPaid(ticketId: string){
+        let ticket = new Ticket("", ticketId, "", "", "Paid", new Timestamp(0,0), 0, 0, 0, 0);
+        await updateDB.updateTicketStatus(ticket);
+        console.log(ticketId);
+    }
 }

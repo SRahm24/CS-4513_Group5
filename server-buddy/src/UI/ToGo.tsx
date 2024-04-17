@@ -247,7 +247,10 @@ function createData(
                   </TableBody>
                 </Table>
                 <Stack spacing={2} p={2} direction="row">
-                    <Button variant="contained" onClick={() => onClickCheckout(row)}>Checkout</Button>
+                    <Button variant="contained" onClick={async () => {
+                      await manager.updateTicketStatusToPaid(row.TicketId)
+                      
+                    }}>Checkout</Button>
                     <Button variant="contained" onClick={() => setOpenItemTable(true)}>Add item</Button>
                 </Stack>
               </Box>

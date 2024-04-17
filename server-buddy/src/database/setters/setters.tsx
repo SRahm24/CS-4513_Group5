@@ -21,8 +21,9 @@ export class setters {
     */
     static async pushOrder(order: Order) {
         const orderRef = collection(db, "Orders");
-        const orderDoc = doc(orderRef);
         const uniqueId = "ord_" + (Date.now() % 1000) + "__" + UniqueId.generateUniqueId(order.employeeId);
+        const orderDoc = doc(orderRef, uniqueId);
+        
         await setDoc(orderDoc, {
             orderId: uniqueId,
             ticketId: order.getTicketId(),
@@ -46,8 +47,8 @@ export class setters {
     */
     static async pushTicket(ticket: Ticket) {
         const ticketRef = collection(db, "Tickets");
-        const ticketDoc = doc(ticketRef);
         const uniqueId = "tick_" + (Date.now() % 1000) + "__" + UniqueId.generateUniqueId(ticket.restaurantId);
+        const ticketDoc = doc(ticketRef, uniqueId);
         await setDoc(ticketDoc, {
             ticketName: ticket.getTicketName(),
             ticketId: uniqueId,
