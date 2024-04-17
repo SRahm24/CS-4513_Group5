@@ -57,10 +57,6 @@ const MenuProps = {
 
 let entireMenu: DocumentData[] = [];
 
-MenuAndItemsQueries.getAllMenus().then(menus => {
-  entireMenu = menus;
-});
-
 
 
 function getStyles(name: string, personName: string[], theme: Theme) {
@@ -501,20 +497,34 @@ function createData(
   }
   
 function CollapsibleTable() {
+    const [updateMenu, setUpdateMenu] = React.useState(true);
+
     const [rows, setRows]: any[] = React.useState([]);
-    React.useState(() => {
-      manager.getAllTicketData().then(ticketData => setRows(ticketData));
-    })
 
     let startMenu: DocumentData[] = [];
 
-    entireMenu.forEach(item => {
-      if(item.type == "App"){
-        startMenu.push(item);
-      }
-    });
-
     const [menu, setMenu] = React.useState(startMenu);
+
+    React.useEffect(() => {
+      if(updateMenu){
+        MenuAndItemsQueries.getAllMenus().then(data => {
+        entireMenu = data;
+        setUpdateMenu(false);
+
+        let startMenu: DocumentData[] = [];
+
+        
+        entireMenu.forEach(item => {
+          if(item.itemName == "App"){
+            startMenu.push(item);
+          }
+        });
+        console.log(entireMenu);
+        setMenu(startMenu);
+      })
+      }
+      
+    }, [updateMenu]);
 
     const [name, setName] = React.useState('To-Go');
     const [openOrder, setOpenOrder] = React.useState(false);
@@ -582,8 +592,8 @@ function CollapsibleTable() {
 
       let itemPrice = 0;
       menu.forEach(item => {
-        if(item.name == value){
-          itemPrice = item.price;
+        if(item.itemName == value){
+          itemPrice = item.itemPrice;
         }
       });
 
@@ -804,7 +814,7 @@ function CollapsibleTable() {
                     setType("App");
                     let appMenu: DocumentData[] = []
                     entireMenu.forEach(item => {
-                      if(item.type == "App"){
+                      if(item.itemCategory == "App"){
                         appMenu.push(item);
                       }
                     });
@@ -816,7 +826,7 @@ function CollapsibleTable() {
                     setType("Entree");
                     let entreeMenu: DocumentData[] = []
                     entireMenu.forEach(item => {
-                      if(item.type == "Entree"){
+                      if(item.itemCategory == "Entree"){
                         entreeMenu.push(item);
                       }
                     });
@@ -828,7 +838,7 @@ function CollapsibleTable() {
                     setType("Dessert");
                     let dessMenu: DocumentData[] = []
                     entireMenu.forEach(item => {
-                      if(item.type == "Dessert"){
+                      if(item.itemCategory == "Dessert"){
                         dessMenu.push(item);
                       }
                     });
@@ -840,7 +850,7 @@ function CollapsibleTable() {
                     setType("Bev");
                     let bevMenu: DocumentData[] = []
                     entireMenu.forEach(item => {
-                      if(item.type == "Bev"){
+                      if(item.itemCategory == "Bev"){
                         bevMenu.push(item);
                       }
                     });
@@ -860,11 +870,11 @@ function CollapsibleTable() {
                 >
                   {menu.map((item) => (
                   <MenuItem
-                    key={item.name}
-                    value={item.name}
-                    style={getStyles(item.name, itemName, theme)}
+                    key={item.itemName}
+                    value={item.itemName}
+                    style={getStyles(item.itemName, itemName, theme)}
                   >
-                    {item.name}
+                    {item.itemName}
                     </MenuItem>
                   ))}
                 </Select>
@@ -884,8 +894,8 @@ function CollapsibleTable() {
                       setQuantity(Number(event.target.value));
                       let itemPrice = 0;
                       menu.forEach(item => {
-                        if(item.name == itemName[0]){
-                          itemPrice = item.price;
+                        if(item.itemName == itemName[0]){
+                          itemPrice = item.itemPrice;
                         }
                       });
 

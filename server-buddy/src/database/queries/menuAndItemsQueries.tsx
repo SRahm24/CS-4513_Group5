@@ -15,7 +15,7 @@ export class MenuAndItemsQueries {
         await (await getDocsFromServer(q)).forEach((doc) => {
             result.push(doc);
         });
-        //console.log(result.map((doc) => doc.data()));
+        console.log(result.map((doc) => doc.data()));
         return result.map((doc) => doc.data());
     }
 
