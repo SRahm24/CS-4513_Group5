@@ -23,7 +23,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Container from '@mui/material/Container';
 import ToGo from './ToGo';
-import DataTable from './Manager';
+import DataTable from './Kitchen';
 
 const drawerWidth = 240;
 

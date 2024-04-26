@@ -105,7 +105,7 @@ function createData(
         setOpenItemTable(false);
     };
 
-    const handleDelete = (rowIndex: number) => {
+    const updateTable = (rowIndex: number) => {
       setOrders((prevRows:any) =>
       prevRows.filter((_:any, index:any) => index !== rowIndex)
       );
@@ -206,17 +206,16 @@ function createData(
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  Order
+                  Order Details (Ticket ID: {row.TicketId})
                 </Typography>
                 <Table size="small" aria-label="purchases">
                   <TableHead>
                     <TableRow>
                       <TableCell>Id</TableCell>
                       <TableCell>Item</TableCell>
-                      <TableCell align="right">Type</TableCell>
                       <TableCell align="right">Quantity</TableCell>
                       <TableCell align="right">Status</TableCell>
-                      <TableCell align="right">Price ($)</TableCell>
+                      <TableCell align="right">Update</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -226,23 +225,31 @@ function createData(
                           {orderRow.itemId}
                         </TableCell>
                         <TableCell>{orderRow.item}</TableCell>
-                        <TableCell align="right">{orderRow.type}</TableCell>
                         <TableCell align="right">{orderRow.quantity}</TableCell>
                         <TableCell align="right">{orderRow.status}</TableCell>
                         <TableCell align="right">
-                          <Button variant="contained" color="error" 
+                          <Button variant="contained" 
                           onClick={() => 
-                            { 
-                            const bool = confirm('Are you sure you want to delete this order?');
-                            if (bool) {
-                              handleDelete(orderRowIndex);
-                              alert('Order deleted');
-                            }
-                            else
                             {
-                              alert('Order not deleted');
-                            }}}>
-                          DELETE
+                              const bool = confirm('Are you sure you want to delete this order?');
+                              if (bool && orderRow.status == "In Progress") {
+                                orderRow.status = "Ready";
+                                alert('Order status updated to Ready');
+                                alert(orderRowIndex);
+                                updateTable(orderRowIndex);
+                              }
+                              else if (bool && orderRow.status == "Ready") 
+                                {
+                                  orderRow.status = "Completed";
+                                  alert('Order status updated to Completed');
+                                  updateTable(orderRowIndex);
+                                }
+                                else if (bool == false)
+                                {
+                                  alert('Order status not updated');
+                                }
+                            }}>
+                          UPDATE
                           </Button>
                         </TableCell>
                       </TableRow>
