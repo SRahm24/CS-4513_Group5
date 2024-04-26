@@ -29,6 +29,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { MenuAndItemsQueries } from '../database/queries/menuAndItemsQueries';
 import { DocumentData } from 'firebase/firestore';
 import { TicketManager } from './TicketManager';
+import { updateDB } from '../database/setters/updateDB';
 import { reload } from 'firebase/auth';
 
 
@@ -94,21 +95,24 @@ function createData(
   function Row(props: { row: ReturnType<typeof createData> }) {
     const {row} = props;
     const [orders, setOrders]: any[] = React.useState(row.order);
-    const [open, setOpen] = React.useState(false);
 
     const [itemTable, setItemTable]: any[] = React.useState([]);
-    const [openItemTable, setOpenItemTable] = React.useState(false);
-    const handleClickOpenItemTable = () => {
-        setOpenItemTable(true);
-    };
-    const handleCloseItemTable = () => {
-        setOpenItemTable(false);
-    };
 
-    const updateTable = (rowIndex: number) => {
-      setOrders((prevRows:any) =>
-      prevRows.filter((_:any, index:any) => index !== rowIndex)
+    const handleDelete = (index:number,e:any) => {
+      setOrders(orders.filter((v:any, i:number) => i !== index));
+  }
+
+    const updateTable = (rowItemId: number) => {
+      setOrders((prevRows: any) =>
+        prevRows.filter((_: any) => _.itemId !== rowItemId)
       );
+  
+      // Check if the order status is "Completed"
+      if (row.Status === "Completed") {
+        // Perform any additional actions, such as deleting the row entry from the database
+        // For demonstration purposes, I'm just logging the deletion
+        alert("Row with Ticket ID ${row.TicketId} deleted from database.");
+      }
     };
 
     let startMenu: DocumentData[] = [];
@@ -126,30 +130,6 @@ function createData(
     const [Quantity, setQuantity] = React.useState(1);
     const [Status, setStatus] = React.useState('In progress');
     const [Price, setPrice] = React.useState(0.0);
-
-    const [openGetItem, setOpenGetItem] = React.useState(false);
-    const handleClickOpenGetItem = () => {
-        setOpenGetItem(true);
-    };
-    const handleCloseGetItem = () => {
-        setOpenGetItem(false);
-        setItem("");
-        setQuantity(1);
-        setPrice(0);
-    };
-    const resetItemTable = () => {
-      setItemTable((itemTable: any) => []);
-    }
-
-    const [alignment, setAlignment] = React.useState('App');
-    const handleToggleChange = (
-      event: React.MouseEvent<HTMLElement>,
-      newAlignment: string,
-    ) => {
-      if (newAlignment !== null) {
-        setAlignment(newAlignment);
-      }
-    };
 
     const [itemName, setItemName] = React.useState<string[]>([]);
 
@@ -229,25 +209,34 @@ function createData(
                         <TableCell align="right">{orderRow.status}</TableCell>
                         <TableCell align="right">
                           <Button variant="contained" 
-                          onClick={() => 
+                          onClick={buttonClicked => 
                             {
-                              const bool = confirm('Are you sure you want to delete this order?');
-                              if (bool && orderRow.status == "In Progress") {
+                              const bool = confirm('Are you sure you want to update this order?');
+                              if (bool && orderRow.status == "In Progress") 
+                                {
                                 orderRow.status = "Ready";
                                 alert('Order status updated to Ready');
                                 alert(orderRowIndex);
+                                // update the ticket's status to Ready
                                 updateTable(orderRowIndex);
                               }
                               else if (bool && orderRow.status == "Ready") 
                                 {
                                   orderRow.status = "Completed";
                                   alert('Order status updated to Completed');
-                                  updateTable(orderRowIndex);
+                                  // delete the row based on its index
+                                  alert(orderRow);
+                                  updateDB.updateOrderStatus(orderRow);
+                                  updateTable(orderRow);
                                 }
-                                else if (bool == false)
+                              else if (bool && orderRow.status == "Completed") 
                                 {
-                                  alert('Order status not updated');
+                                  handleDelete(orderRowIndex, buttonClicked);
                                 }
+                              else if (bool == false)
+                                {
+                                alert('Order status not updated');
+                              }
                             }}>
                           UPDATE
                           </Button>
@@ -281,13 +270,7 @@ function KitchenTable() {
 
     const [name, setName] = React.useState('To-Go');
     const [openOrder, setOpenOrder] = React.useState(false);
-    const handleClickOpenOrder = () => {
-        setOpenOrder(true);
-    };
-    const handleCloseOrder = () => {
-        setOpenOrder(false);
-        setName("");
-    };
+
 
     const [Item, setItem] = React.useState('');
     const [Type, setType] = React.useState('App');
@@ -295,26 +278,7 @@ function KitchenTable() {
     const [Status, setStatus] = React.useState('In progress');
     const [Price, setPrice] = React.useState(0.0);
     
-    const [openGetItem, setOpenGetItem] = React.useState(false);
-    const handleClickOpenGetItem = () => {
-        setOpenGetItem(true);
-    };
-    const handleCloseGetItem = () => {
-        setOpenGetItem(false);
-        setItem("");
-        setQuantity(1);
-        setPrice(0);
-    };
-
     const [isPushing, setIsPushing] = React.useState(false);
-
-    const [openItemTable, setOpenItemTable] = React.useState(false);
-    const handleClickOpenItemTable = () => {
-        setOpenItemTable(true);
-    };
-    const handleCloseItemTable = () => {
-        setOpenItemTable(false);
-    };
 
     const [itemTable, setItemTable]: any[] = React.useState([]);
     const resetItemTable = () => {
@@ -379,13 +343,12 @@ function KitchenTable() {
       <TableContainer component={Paper} >
         <Table aria-label="collapsible table">
           <TableBody>
-            {rows.map((row: any) => (
+            {rows.map((row: any, rowIndex : number) => (
               <Row key={row.TicketId} row={row} />
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      
     );
   }
 
