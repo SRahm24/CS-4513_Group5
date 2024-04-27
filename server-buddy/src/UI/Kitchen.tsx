@@ -84,10 +84,11 @@ const MenuProps = {
                             {
                               const bool = confirm('Are you sure you want to update this order?');
                               if (bool && row.orderStatus == "In Progress") {
-                                alert(row.ticketId);
+                                console.log(row.orderId);
                                 const ticketOrder = await manager.getOrdersByTicket(row.ticketId);
                                 console.log(ticketOrder);
-                                //ticketOrder.setOrderStatus("Ready");
+                                console.log(ticketOrder[0]);
+                                ticketOrder[0].setOrderStatus("Ready");
                                 updateDB.updateOrderStatus(ticketOrder[0]);
                               }
                               else if (bool && row.orderStatus == "Ready") 
