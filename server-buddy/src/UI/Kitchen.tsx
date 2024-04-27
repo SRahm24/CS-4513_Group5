@@ -118,10 +118,15 @@ const MenuProps = {
 
   function BasicTable() {
 
+
     const [rows, setRows]: any[] = React.useState([]);
-    React.useState(() => {
+    const [kitchenBool, setKitchenBool] = React.useState(false);
+    React.useEffect(() => {
+      setKitchenBool(true);
       OrdersQueries.getKitchenOrders().then(orderData => setRows(orderData));
-    })
+    }, [kitchenBool]
+  )
+
   
     return (
       <TableContainer component={Paper}>
