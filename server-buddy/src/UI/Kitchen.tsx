@@ -1,7 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,27 +7,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Theme, useTheme } from '@mui/material/styles';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { MenuAndItemsQueries } from '../database/queries/menuAndItemsQueries';
 import { DocumentData } from 'firebase/firestore';
 import { TicketManager } from './TicketManager';
-import { updateDB } from '../database/setters/updateDB';
+import { Order } from '../objects/order';
 import { reload } from 'firebase/auth';
 
 
@@ -95,24 +81,21 @@ function createData(
   function Row(props: { row: ReturnType<typeof createData> }) {
     const {row} = props;
     const [orders, setOrders]: any[] = React.useState(row.order);
+    const [open, setOpen] = React.useState(false);
 
     const [itemTable, setItemTable]: any[] = React.useState([]);
+    const [openItemTable, setOpenItemTable] = React.useState(false);
+    const handleClickOpenItemTable = () => {
+        setOpenItemTable(true);
+    };
+    const handleCloseItemTable = () => {
+        setOpenItemTable(false);
+    };
 
-    const handleDelete = (index:number,e:any) => {
-      setOrders(orders.filter((v:any, i:number) => i !== index));
-  }
-
-    const updateTable = (rowItemId: number) => {
-      setOrders((prevRows: any) =>
-        prevRows.filter((_: any) => _.itemId !== rowItemId)
+    const updateTable = (rowIndex: number) => {
+      setOrders((prevRows:any) =>
+      prevRows.filter((_:any, index:any) => index !== rowIndex)
       );
-  
-      // Check if the order status is "Completed"
-      if (row.Status === "Completed") {
-        // Perform any additional actions, such as deleting the row entry from the database
-        // For demonstration purposes, I'm just logging the deletion
-        alert("Row with Ticket ID ${row.TicketId} deleted from database.");
-      }
     };
 
     let startMenu: DocumentData[] = [];
@@ -130,6 +113,30 @@ function createData(
     const [Quantity, setQuantity] = React.useState(1);
     const [Status, setStatus] = React.useState('In progress');
     const [Price, setPrice] = React.useState(0.0);
+
+    const [openGetItem, setOpenGetItem] = React.useState(false);
+    const handleClickOpenGetItem = () => {
+        setOpenGetItem(true);
+    };
+    const handleCloseGetItem = () => {
+        setOpenGetItem(false);
+        setItem("");
+        setQuantity(1);
+        setPrice(0);
+    };
+    const resetItemTable = () => {
+      setItemTable((itemTable: any) => []);
+    }
+
+    const [alignment, setAlignment] = React.useState('App');
+    const handleToggleChange = (
+      event: React.MouseEvent<HTMLElement>,
+      newAlignment: string,
+    ) => {
+      if (newAlignment !== null) {
+        setAlignment(newAlignment);
+      }
+    };
 
     const [itemName, setItemName] = React.useState<string[]>([]);
 
@@ -209,34 +216,25 @@ function createData(
                         <TableCell align="right">{orderRow.status}</TableCell>
                         <TableCell align="right">
                           <Button variant="contained" 
-                          onClick={buttonClicked => 
+                          onClick={() => 
                             {
                               const bool = confirm('Are you sure you want to update this order?');
-                              if (bool && orderRow.status == "In Progress") 
-                                {
-                                orderRow.status = "Ready";
+                              if (bool && orderRow.status == "In Progress") {
                                 alert('Order status updated to Ready');
-                                alert(orderRowIndex);
-                                // update the ticket's status to Ready
+                                orderRow.setOrderStatus("Ready");
                                 updateTable(orderRowIndex);
+                                orderRow.status = "Ready";
                               }
                               else if (bool && orderRow.status == "Ready") 
                                 {
                                   orderRow.status = "Completed";
                                   alert('Order status updated to Completed');
-                                  // delete the row based on its index
-                                  alert(orderRow);
-                                  updateDB.updateOrderStatus(orderRow);
-                                  updateTable(orderRow);
+                                  updateTable(orderRowIndex);
                                 }
-                              else if (bool && orderRow.status == "Completed") 
+                                else if (bool == false)
                                 {
-                                  handleDelete(orderRowIndex, buttonClicked);
+                                  alert('Order status not updated');
                                 }
-                              else if (bool == false)
-                                {
-                                alert('Order status not updated');
-                              }
                             }}>
                           UPDATE
                           </Button>
@@ -270,7 +268,13 @@ function KitchenTable() {
 
     const [name, setName] = React.useState('To-Go');
     const [openOrder, setOpenOrder] = React.useState(false);
-
+    const handleClickOpenOrder = () => {
+        setOpenOrder(true);
+    };
+    const handleCloseOrder = () => {
+        setOpenOrder(false);
+        setName("");
+    };
 
     const [Item, setItem] = React.useState('');
     const [Type, setType] = React.useState('App');
@@ -278,7 +282,26 @@ function KitchenTable() {
     const [Status, setStatus] = React.useState('In progress');
     const [Price, setPrice] = React.useState(0.0);
     
+    const [openGetItem, setOpenGetItem] = React.useState(false);
+    const handleClickOpenGetItem = () => {
+        setOpenGetItem(true);
+    };
+    const handleCloseGetItem = () => {
+        setOpenGetItem(false);
+        setItem("");
+        setQuantity(1);
+        setPrice(0);
+    };
+
     const [isPushing, setIsPushing] = React.useState(false);
+
+    const [openItemTable, setOpenItemTable] = React.useState(false);
+    const handleClickOpenItemTable = () => {
+        setOpenItemTable(true);
+    };
+    const handleCloseItemTable = () => {
+        setOpenItemTable(false);
+    };
 
     const [itemTable, setItemTable]: any[] = React.useState([]);
     const resetItemTable = () => {
@@ -343,12 +366,13 @@ function KitchenTable() {
       <TableContainer component={Paper} >
         <Table aria-label="collapsible table">
           <TableBody>
-            {rows.map((row: any, rowIndex : number) => (
+            {rows.map((row: any) => (
               <Row key={row.TicketId} row={row} />
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      
     );
   }
 
