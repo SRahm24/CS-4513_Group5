@@ -123,9 +123,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   );
 }
 
-function BasicTable() {
-
-
+function KitchenTable() {
   const [rows, setRows]: any[] = React.useState([]);
   const [kitchenBool, setKitchenBool] = React.useState(false);
   React.useEffect(() => {
@@ -133,8 +131,7 @@ function BasicTable() {
     OrdersQueries.getKitchenOrders().then(orderData => setRows(orderData));
   }, [kitchenBool]
   )
-
-
+  
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -161,7 +158,7 @@ function BasicTable() {
 function Kitchen() {
   return (
     <>
-      <BasicTable /> {/* Added BasicTable component */}
+      <KitchenTable />
     </>
   )
 }
