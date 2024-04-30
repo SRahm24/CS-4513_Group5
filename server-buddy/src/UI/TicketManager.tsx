@@ -65,7 +65,7 @@ export class TicketManager{
             let tickId = ticket.ticketId;
             let tickName = ticket.ticketName;
             let tickStatus = ticket.ticketStatus;
-            let date = await ticket.ticketDateTime.toDate();
+            let date = ticket.ticketDateTime.toDate();
             console.log(ticket.ticketDateTime);
             let hours: String = (date.getHours() % 12).toString();
             let minutes: String = date.getMinutes().toString();
