@@ -500,6 +500,13 @@ function CollapsibleTable() {
     const [updateMenu, setUpdateMenu] = React.useState(true);
 
     const [rows, setRows]: any[] = React.useState([]);
+    const [updateRows, setUpdateRows] = React.useState(true);
+    React.useEffect(() => {
+      if(updateRows){
+        manager.getAllTicketData().then(ticketData => setRows(ticketData));
+        setUpdateRows(false);
+      }
+    }, [updateRows]);
 
     let startMenu: DocumentData[] = [];
 
