@@ -7,6 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
@@ -19,17 +20,6 @@ import { updateDB } from '../database/setters/updateDB';
 
 const manager: TicketManager = new TicketManager();
 let refresh = false;
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
 
 function createData(
   ticketId: string,
@@ -98,7 +88,10 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                   </TableRow>
                 ))}
               </TableBody>
-              <Button variant="text" color="primary"
+            </Table>
+            <Stack spacing={2} direction={'row'} p={2}>
+              {row.orderStatus == "In Progress"}
+              <Button variant="contained" color="primary"
                 onClick={async () => {
                   const bool = confirm('Are you sure you want to update this order?');
                   if (bool && row.orderStatus == "In Progress") {
@@ -106,16 +99,16 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                     updateDB.updateOrderStatus(newOrder);
                   }
                   else if (bool && row.orderStatus == "Ready") {
-                    newOrder.setOrderStatus("Completed");
+                    newOrder.setOrderStatus("Sent");
                     updateDB.updateOrderStatus(newOrder);
                   }
                   else if (bool == false) {
                     alert('Order status not updated');
                   }
                 }}>
-                UPDATE
+                {row.orderStatus == "In Progress" ? "UPDATE" : "SEND"}
               </Button>
-            </Table>
+            </Stack>
           </Box>
         </TableCell>
       </TableRow>
@@ -128,27 +121,27 @@ function KitchenTable() {
   const [kitchenBool, setKitchenBool] = React.useState(false);
   React.useEffect(() => {
     setKitchenBool(true);
-    OrdersQueries.getKitchenOrders().then(orderData => setRows(orderData));
+    OrdersQueries.getAllOrders().then(orderData => setRows(orderData));
   }, [kitchenBool]
   )
-  
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Kitchen Orders
-        </Typography>
+          <Typography
+            sx={{ flex: '1 1 100%' }}
+            variant="h6"
+            id="tableTitle"
+            component="div"
+          >
+            Kitchen Orders
+          </Typography>
         </TableHead>
         <TableBody>
-          {rows.map((row: any) => (
-            <Row key={row.orderId} row={row} />
-          ))}
+          {rows.map((row: any) =>
+            row.orderStatus !== "Sent" && <Row key={row.orderId} row={row} />
+          )}
         </TableBody>
       </Table>
     </TableContainer>
