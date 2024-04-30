@@ -84,7 +84,8 @@ export class TicketManager{
             }
 
             //let ticketDate = (date.getMonth() + 1) + "/" + date.getDay() + "/" + date.getFullYear();
-            let ticketDate: String = (date.getMonth() + 1).toString() + "/" + (date.getDay()).toString() + "/" + (date.getFullYear()).toString();
+            let ticketDate: String = (date.getMonth() + 1).toString() + "/" + (date.getDate()).toString() + "/" + (date.getFullYear()).toString();
+
 
             let currentOrder: {itemId: number, item: string, type: string, quantity: number, status: string, price: number}[] = [];
             orders.forEach(order => {
