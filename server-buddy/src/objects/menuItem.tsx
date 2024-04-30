@@ -7,7 +7,7 @@ export class Item {
         public price: number,
         // quantity is used for inventory tracking and ordering.
         public quantity: number,
-        public category: string,
+        public type: string,
         public restaurantId: string,
     ) {}
 
@@ -42,11 +42,11 @@ export class Item {
     public setItemQuantity(quantity: number): void {
         this.quantity = quantity;
     }
-    public getItemCategory(): string {
-        return this.category;
+    public getItemType(): string {
+        return this.type;
     }
-    public setItemCategory(category: string): void {
-        this.category = category;
+    public setItemType(type: string): void {
+        this.type = type;
     }
     public getRestaurantId(): string {
         return this.restaurantId;

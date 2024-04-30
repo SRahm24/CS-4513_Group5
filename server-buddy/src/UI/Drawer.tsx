@@ -23,6 +23,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Container from '@mui/material/Container';
 import ToGo from './ToGo';
+import DataTable from './Manager';
 
 const drawerWidth = 240;
 
@@ -199,7 +200,7 @@ export default function PersistentDrawerLeft() {
 
           <CssBaseline />
           <Container maxWidth={false}>
-            <ToGo/>
+            <DataTable/>
           </Container>
 
         
