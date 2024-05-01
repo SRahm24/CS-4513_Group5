@@ -36,11 +36,11 @@ const manager: TicketManager = new TicketManager();
 let refresh = false;
 
 
-function onClickCheckout(row: ReturnType<typeof createData>){
+function onClickCheckout(row: ReturnType<typeof createData>) {
 
 }
 
-function onClickAddItem(row: ReturnType<typeof createData>){
+function onClickAddItem(row: ReturnType<typeof createData>) {
 
 }
 
@@ -70,883 +70,884 @@ function getStyles(name: string, personName: string[], theme: Theme) {
 
 
 function createData(
-    Name:String,
-    Time: String,
-    Date: String,
-    Status: String,
-    order: any[]
-  ) {
-    let TicketId = "";
-    return {
-      TicketId,
-      Name,
-      Time,
-      Date,
-      Status,
-      order,
-    };
+  Name: String,
+  Time: String,
+  Date: String,
+  Status: String,
+  order: any[]
+) {
+  let TicketId = "";
+  return {
+    TicketId,
+    Name,
+    Time,
+    Date,
+    Status,
+    order,
+  };
+}
+
+function Row(props: { row: ReturnType<typeof createData> }) {
+  const { row } = props;
+  const [orders, setOrders]: any[] = React.useState(row.order);
+  const [open, setOpen] = React.useState(false);
+
+  const [itemTable, setItemTable]: any[] = React.useState([]);
+  const [openItemTable, setOpenItemTable] = React.useState(false);
+  const handleClickOpenItemTable = () => {
+    setOpenItemTable(true);
+  };
+  const handleCloseItemTable = () => {
+    setOpenItemTable(false);
+  };
+
+  let startMenu: DocumentData[] = [];
+
+  entireMenu.forEach(item => {
+    if (item.type == "App") {
+      startMenu.push(item);
+    }
+  });
+
+  const [menu, setMenu] = React.useState(startMenu);
+
+
+  const [Item, setItem] = React.useState('');
+  const [Type, setType] = React.useState('App');
+  const [Quantity, setQuantity] = React.useState(1);
+  const [Status, setStatus] = React.useState('In progress');
+  const [Price, setPrice] = React.useState(0.0);
+
+  const [openGetItem, setOpenGetItem] = React.useState(false);
+  const handleClickOpenGetItem = () => {
+    setOpenGetItem(true);
+  };
+  const handleCloseGetItem = () => {
+    setOpenGetItem(false);
+    setItem("");
+    setQuantity(1);
+    setPrice(0);
+  };
+  const resetItemTable = () => {
+    setItemTable((itemTable: any) => []);
   }
-  
-  function Row(props: { row: ReturnType<typeof createData> }) {
-    const {row} = props;
-    const [orders, setOrders]: any[] = React.useState(row.order);
-    const [open, setOpen] = React.useState(false);
 
-    const [itemTable, setItemTable]: any[] = React.useState([]);
-    const [openItemTable, setOpenItemTable] = React.useState(false);
-    const handleClickOpenItemTable = () => {
-        setOpenItemTable(true);
-    };
-    const handleCloseItemTable = () => {
-        setOpenItemTable(false);
-    };
+  const [alignment, setAlignment] = React.useState('App');
+  const handleToggleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newAlignment: string,
+  ) => {
+    if (newAlignment !== null) {
+      setAlignment(newAlignment);
+    }
+  };
 
-    let startMenu: DocumentData[] = [];
+  const [itemName, setItemName] = React.useState<string[]>([]);
 
-    entireMenu.forEach(item => {
-      if(item.type == "App"){
-        startMenu.push(item);
+  const handleSelectChange = (event: SelectChangeEvent<typeof itemName>) => {
+    const {
+      target: { value },
+    } = event;
+    setItemName(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+
+    let itemPrice = 0;
+    menu.forEach(item => {
+      if (item.name == value) {
+        itemPrice = item.price;
       }
     });
 
-    const [menu, setMenu] = React.useState(startMenu);
+    setPrice(itemPrice * Quantity);
+  };
 
-    const [Item, setItem] = React.useState('');
-    const [Type, setType] = React.useState('App');
-    const [Quantity, setQuantity] = React.useState(1);
-    const [Status, setStatus] = React.useState('In progress');
-    const [Price, setPrice] = React.useState(0.0);
+  const theme = useTheme();
 
-    const [openGetItem, setOpenGetItem] = React.useState(false);
-    const handleClickOpenGetItem = () => {
-        setOpenGetItem(true);
-    };
-    const handleCloseGetItem = () => {
-        setOpenGetItem(false);
-        setItem("");
-        setQuantity(1);
-        setPrice(0);
-    };
-    const resetItemTable = () => {
-      setItemTable((itemTable: any) => []);
+  const [isPushing, setIsPushing] = React.useState(false);
+  React.useEffect(() => {
+    if (isPushing) {
+      let ItemId = 0;
+      let newItemTable = [];
+      itemTable.forEach((element: any) => {
+        ItemId++;
+        newItemTable.push(element);
+      });
+      newItemTable.push({ itemId: ItemId + 1, item: Item, type: Type, quantity: Quantity, status: Status, price: Price });
+
+      setItemTable(newItemTable);
+      setItemName([]);
+      setIsPushing(false);
     }
 
-    const [alignment, setAlignment] = React.useState('App');
-    const handleToggleChange = (
-      event: React.MouseEvent<HTMLElement>,
-      newAlignment: string,
-    ) => {
-      if (newAlignment !== null) {
-        setAlignment(newAlignment);
-      }
-    };
+    let nme = "";
+    itemName.forEach(char => {
+      nme += char;
+    });
+    setItem(nme);
+  }, [isPushing, itemName]);
 
-    const [itemName, setItemName] = React.useState<string[]>([]);
 
-    const handleSelectChange = (event: SelectChangeEvent<typeof itemName>) => {
-      const {
-        target: { value },
-      } = event;
-      setItemName(
-        // On autofill we get a stringified value.
-        typeof value === 'string' ? value.split(',') : value,
-      );
 
-      let itemPrice = 0;
-      menu.forEach(item => {
-        if(item.name == value){
-          itemPrice = item.price;
-        }
-      });
-
-      setPrice(itemPrice * Quantity);
-    };
-    
-    const theme = useTheme();
-
-    const [isPushing, setIsPushing] = React.useState(false);
-    React.useEffect(() => {
-      if(isPushing){
-        let ItemId = 0;
-        let newItemTable = [];
-        itemTable.forEach((element: any) => {
-          ItemId++;
-          newItemTable.push(element);
-        });
-        newItemTable.push({itemId: ItemId + 1, item: Item, type: Type, quantity: Quantity, status: Status, price: Price});
-
-        setItemTable(newItemTable);
-        setItemName([]);
-        setIsPushing(false);
-      }
-
-      let nme = "";
-      itemName.forEach(char => {
-        nme += char;
-      });
-      setItem(nme);
-    }, [isPushing, itemName]);
-
-    
-
-    return (
-      <React.Fragment>
-        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-          <TableCell>
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              onClick={() => setOpen(!open)}
-            >
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            </IconButton>
-          </TableCell>
-          <TableCell component="th" scope="row">
-            {row.TicketId}
-          </TableCell>
-          <TableCell align="right">{row.Name}</TableCell>
-          <TableCell align="right">{row.Time}</TableCell>
-          <TableCell align="right">{row.Date}</TableCell>
-          <TableCell align="right">{row.Status}</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
-                  Order
-                </Typography>
-                <Table size="small" aria-label="purchases">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Id</TableCell>
-                      <TableCell>Item</TableCell>
-                      <TableCell align="right">Type</TableCell>
-                      <TableCell align="right">Quantity</TableCell>
-                      <TableCell align="right">Status</TableCell>
-                      <TableCell align="right">Price ($)</TableCell>
+  return (
+    <React.Fragment>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.TicketId}
+        </TableCell>
+        <TableCell align="right">{row.Name}</TableCell>
+        <TableCell align="right">{row.Time}</TableCell>
+        <TableCell align="right">{row.Date}</TableCell>
+        <TableCell align="right">{row.Status}</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                Order
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Id</TableCell>
+                    <TableCell>Item</TableCell>
+                    <TableCell align="right">Type</TableCell>
+                    <TableCell align="right">Quantity</TableCell>
+                    <TableCell align="right">Status</TableCell>
+                    <TableCell align="right">Price ($)</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {row.order.map((orderRow) => (
+                    <TableRow key={orderRow.itemId}>
+                      <TableCell component="th" scope="row">
+                        {orderRow.itemId}
+                      </TableCell>
+                      <TableCell>{orderRow.item}</TableCell>
+                      <TableCell align="right">{orderRow.type}</TableCell>
+                      <TableCell align="right">{orderRow.quantity}</TableCell>
+                      <TableCell align="right">{orderRow.status}</TableCell>
+                      <TableCell align="right">{orderRow.price}</TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {row.order.map((orderRow) => (
-                      <TableRow key={orderRow.itemId}>
-                        <TableCell component="th" scope="row">
-                          {orderRow.itemId}
-                        </TableCell>
-                        <TableCell>{orderRow.item}</TableCell>
-                        <TableCell align="right">{orderRow.type}</TableCell>
-                        <TableCell align="right">{orderRow.quantity}</TableCell>
-                        <TableCell align="right">{orderRow.status}</TableCell>
-                        <TableCell align="right">{orderRow.price}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                <Stack spacing={2} p={2} direction="row">
-                    <Button variant="contained" onClick={async () => {
-                      await manager.updateTicketStatusToPaid(row.TicketId)
-                      
-                    }}>Checkout</Button>
-                    <Button variant="contained" onClick={() => setOpenItemTable(true)}>Add item</Button>
-                </Stack>
-              </Box>
-            </Collapse>
-          </TableCell>
-        </TableRow>
-
-        <Dialog
-                open={openItemTable}
-                onClose={handleCloseItemTable}
-                PaperProps={{
-                    component: 'form',
-                    onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-                        event.preventDefault();
-                        const formData = new FormData(event.currentTarget);
-                        const formJson = Object.fromEntries((formData as any).entries());
-                        const name = formJson.Name;
-                        console.log(name);
-                        handleCloseItemTable();
-                    },
-                }}
-            >     
-                <DialogTitle>Item Table</DialogTitle>
-                <DialogContent>
-                    
-                <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
-                  Order
-                </Typography>
-                <Table size="small" aria-label="purchases">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Id</TableCell>
-                      <TableCell>Item</TableCell>
-                      <TableCell align="right">Type</TableCell>
-                      <TableCell align="right">Quantity</TableCell>
-                      <TableCell align="right">Status</TableCell>
-                      <TableCell align="right">Price ($)</TableCell>
-                      <TableCell align="right"></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {itemTable.map((item:{itemId: number, item: String, type: String, quantity: number, status: String, price: number}) => (
-                      <TableRow key={item.itemId}>
-                        <TableCell component="th" scope="row">
-                          {item.itemId}
-                        </TableCell>
-                        <TableCell>{item.item}</TableCell>
-                        <TableCell align="right">{item.type}</TableCell>
-                        <TableCell align="right">{item.quantity}</TableCell>
-                        <TableCell align="right">{item.status}</TableCell>
-                        <TableCell align="right">{item.price}</TableCell>
-                        <Stack p={1}>
-                          <Button variant="contained" onClick={() => {
-                            let table: any[] = [];
-                            let offset = 0;
-                            itemTable.forEach((element: any) => {
-                              if(element.itemId != item.itemId){
-                                element.itemId -= offset;
-                                table.push(element);
-                              }
-                              else{
-                                offset += 1;
-                              }
-                            });
-                            setItemTable(table);
-                          }}>
-                            Remove
-                          </Button>
-                        </Stack>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                <Stack spacing={2} p={2}>
-                  <Button variant="contained" onClick={handleClickOpenGetItem}>Add Item</Button>
-                </Stack>
-              </Box>
-                    
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => {setOpenItemTable(false); setItemTable((itemTable: any) => []);}}>Back</Button>
-                    <Button type="submit" onClick={() => {
-
-                      let itemArray: string[] = [];
-                      console.log(itemTable);
-                      itemTable.forEach((item: any) => {
-                        for(let i = 0; i < item.quantity; i++){
-                          itemArray.push(item.item);
-                        }
-                      });
-
-                      manager.addOrder(row.TicketId, "", -1, "", "In progress", itemArray);
-
-                      handleCloseItemTable();
-          
-                      resetItemTable();
-                      }}>
-                        Enter
-                      </Button>
-                    </DialogActions>
-            </Dialog>
-
-            <Dialog
-                open={openGetItem}
-                onClose={handleCloseGetItem}
-                PaperProps={{
-                    component: 'form',
-                    onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-                        event.preventDefault();
-                        const formData = new FormData(event.currentTarget);
-                        const formJson = Object.fromEntries((formData as any).entries());
-                        const name = formJson.Name;
-                        console.log(name);
-                        handleCloseGetItem();
-                    },
-                }}
-            >     
-                <DialogTitle>Add item</DialogTitle>
-                <DialogContent>
-                <Stack spacing={1}>
-                <ToggleButtonGroup
-                  color="primary"
-                  value={alignment}
-                  exclusive
-                  onChange={handleToggleChange}
-                  aria-label="Platform"
-                >
-                  <ToggleButton value="App" onClick = {() => {
-                    setType("App");
-                    let appMenu: DocumentData[] = []
-                    entireMenu.forEach(item => {
-                      if(item.type == "App"){
-                        appMenu.push(item);
-                      }
-                    });
-                    setMenu(appMenu);
-                  }}>
-                    Appetizer
-                  </ToggleButton>
-                  <ToggleButton value="Entree" onClick = {() => {
-                    setType("Entree");
-                    let entreeMenu: DocumentData[] = []
-                    entireMenu.forEach(item => {
-                      if(item.type == "Entree"){
-                        entreeMenu.push(item);
-                      }
-                    });
-                    setMenu(entreeMenu);
-                  }}>
-                    Entree
-                  </ToggleButton>
-                  <ToggleButton value="Dessert" onClick = {() => {
-                    setType("Dessert");
-                    let dessMenu: DocumentData[] = []
-                    entireMenu.forEach(item => {
-                      if(item.type == "Dessert"){
-                        dessMenu.push(item);
-                      }
-                    });
-                    setMenu(dessMenu);
-                  }}>
-                    Dessert
-                  </ToggleButton>
-                  <ToggleButton value="Bev" onClick = {() => {
-                    setType("Bev");
-                    let bevMenu: DocumentData[] = []
-                    entireMenu.forEach(item => {
-                      if(item.type == "Bev"){
-                        bevMenu.push(item);
-                      }
-                    });
-                    setMenu(bevMenu);
-                  }}>
-                    Beverage
-                  </ToggleButton>
-                </ToggleButtonGroup>
-
-                <Select
-                  labelId="item-select"
-                  id="item-select"
-                  value={itemName}
-                  onChange={handleSelectChange}
-                  input={<OutlinedInput label="Name" />}
-                  MenuProps={MenuProps}
-                >
-                  {menu.map((item) => (
-                  <MenuItem
-                    key={item.name}
-                    value={item.name}
-                    style={getStyles(item.name, itemName, theme)}
-                  >
-                    {item.name}
-                    </MenuItem>
                   ))}
-                </Select>
+                </TableBody>
+              </Table>
+              <Stack spacing={2} p={2} direction="row">
+                <Button variant="contained" onClick={async () => {
+                  await manager.updateTicketStatusToPaid(row.TicketId)
 
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="quantity"
-                    name="quantity"
-                    label="quantity"
-                    type="number"
-                    fullWidth
-                    variant="standard"
-                    value={Quantity}
-                    onChange={(event) => {
-                      setQuantity(Number(event.target.value));
-                      let itemPrice = 0;
-                      menu.forEach(item => {
-                        if(item.name == itemName[0]){
-                          itemPrice = item.price;
-                        }
-                      });
+                }}>Checkout</Button>
+                <Button variant="contained" onClick={() => setOpenItemTable(true)}>Add item</Button>
+              </Stack>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
 
-                      setPrice(itemPrice*Number(event.target.value));
-                    }}
-                  />
-                  <TextField
-                    autoFocus
-                    disabled
-                    margin="dense"
-                    id="price"
-                    name="price"
-                    label="price"
-                    type="number"
-                    fullWidth
-                    variant="standard"
-                    value={Price}
-                    onChange={(event) => {setPrice(Number(event.target.value))}}
-                  />
-                </Stack>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseGetItem}>Cancel</Button>
-                    <Button type="submit" onClick={() => {
-                      setIsPushing(true);
-                      }}
-                    >
-                        Enter
+      <Dialog
+        open={openItemTable}
+        onClose={handleCloseItemTable}
+        PaperProps={{
+          component: 'form',
+          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const formJson = Object.fromEntries((formData as any).entries());
+            const name = formJson.Name;
+            console.log(name);
+            handleCloseItemTable();
+          },
+        }}
+      >
+        <DialogTitle>Item Table</DialogTitle>
+        <DialogContent>
+
+          <Box sx={{ margin: 1 }}>
+            <Typography variant="h6" gutterBottom component="div">
+              Order
+            </Typography>
+            <Table size="small" aria-label="purchases">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Id</TableCell>
+                  <TableCell>Item</TableCell>
+                  <TableCell align="right">Type</TableCell>
+                  <TableCell align="right">Quantity</TableCell>
+                  <TableCell align="right">Status</TableCell>
+                  <TableCell align="right">Price ($)</TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {itemTable.map((item: { itemId: number, item: String, type: String, quantity: number, status: String, price: number }) => (
+                  <TableRow key={item.itemId}>
+                    <TableCell component="th" scope="row">
+                      {item.itemId}
+                    </TableCell>
+                    <TableCell>{item.item}</TableCell>
+                    <TableCell align="right">{item.type}</TableCell>
+                    <TableCell align="right">{item.quantity}</TableCell>
+                    <TableCell align="right">{item.status}</TableCell>
+                    <TableCell align="right">{item.price}</TableCell>
+                    <Stack p={1}>
+                      <Button variant="contained" onClick={() => {
+                        let table: any[] = [];
+                        let offset = 0;
+                        itemTable.forEach((element: any) => {
+                          if (element.itemId != item.itemId) {
+                            element.itemId -= offset;
+                            table.push(element);
+                          }
+                          else {
+                            offset += 1;
+                          }
+                        });
+                        setItemTable(table);
+                      }}>
+                        Remove
                       </Button>
-                    </DialogActions>
-            </Dialog>
-      </React.Fragment>
-    );
-  }
-  
+                    </Stack>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <Stack spacing={2} p={2}>
+              <Button variant="contained" onClick={handleClickOpenGetItem}>Add Item</Button>
+            </Stack>
+          </Box>
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => { setOpenItemTable(false); setItemTable((itemTable: any) => []); }}>Back</Button>
+          <Button type="submit" onClick={() => {
+
+            let itemArray: string[] = [];
+            console.log(itemTable);
+            itemTable.forEach((item: any) => {
+              for (let i = 0; i < item.quantity; i++) {
+                itemArray.push(item.item);
+              }
+            });
+
+            manager.addOrder(row.TicketId, "", -1, "", "In progress", itemArray);
+
+            handleCloseItemTable();
+
+            resetItemTable();
+          }}>
+            Enter
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openGetItem}
+        onClose={handleCloseGetItem}
+        PaperProps={{
+          component: 'form',
+          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const formJson = Object.fromEntries((formData as any).entries());
+            const name = formJson.Name;
+            console.log(name);
+            handleCloseGetItem();
+          },
+        }}
+      >
+        <DialogTitle>Add item</DialogTitle>
+        <DialogContent>
+          <Stack spacing={1}>
+            <ToggleButtonGroup
+              color="primary"
+              value={alignment}
+              exclusive
+              onChange={handleToggleChange}
+              aria-label="Platform"
+            >
+              <ToggleButton value="App" onClick={() => {
+                setType("App");
+                let appMenu: DocumentData[] = []
+                entireMenu.forEach(item => {
+                  if (item.itemCategory == "App") {
+                    appMenu.push(item);
+                  }
+                });
+                setMenu(appMenu);
+              }}>
+                Appetizer
+              </ToggleButton>
+              <ToggleButton value="Entree" onClick={() => {
+                setType("Entree");
+                let entreeMenu: DocumentData[] = []
+                entireMenu.forEach(item => {
+                  if (item.itemCategory == "Entree") {
+                    entreeMenu.push(item);
+                  }
+                });
+                setMenu(entreeMenu);
+              }}>
+                Entree
+              </ToggleButton>
+              <ToggleButton value="Dessert" onClick={() => {
+                setType("Dessert");
+                let dessMenu: DocumentData[] = []
+                entireMenu.forEach(item => {
+                  if (item.itemCategory == "Dessert") {
+                    dessMenu.push(item);
+                  }
+                });
+                setMenu(dessMenu);
+              }}>
+                Dessert
+              </ToggleButton>
+              <ToggleButton value="Bev" onClick={() => {
+                setType("Bev");
+                let bevMenu: DocumentData[] = []
+                entireMenu.forEach(item => {
+                  if (item.itemCategory == "Bev") {
+                    bevMenu.push(item);
+                  }
+                });
+                setMenu(bevMenu);
+              }}>
+                Beverage
+              </ToggleButton>
+            </ToggleButtonGroup>
+
+            <Select
+              labelId="item-select"
+              id="item-select"
+              value={itemName}
+              onChange={handleSelectChange}
+              input={<OutlinedInput label="Name" />}
+              MenuProps={MenuProps}
+            >
+              {menu.map((item) => (
+                <MenuItem
+                  key={item.itemName}
+                  value={item.itemName}
+                  style={getStyles(item.itemName, itemName, theme)}
+                >
+                  {item.itemName}
+                </MenuItem>
+              ))}
+            </Select>
+
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="quantity"
+              name="quantity"
+              label="quantity"
+              type="number"
+              fullWidth
+              variant="standard"
+              value={Quantity}
+              onChange={(event) => {
+                setQuantity(Number(event.target.value));
+                let itemPrice = 0;
+                menu.forEach(item => {
+                  if (item.itemName == itemName[0]) {
+                    itemPrice = item.itemPrice;
+                  }
+                });
+
+                setPrice(itemPrice * Number(event.target.value));
+              }}
+            />
+            <TextField
+              autoFocus
+              disabled
+              margin="dense"
+              id="price"
+              name="price"
+              label="price"
+              type="number"
+              fullWidth
+              variant="standard"
+              value={Price}
+              onChange={(event) => { setPrice(Number(event.target.value)) }}
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseGetItem}>Cancel</Button>
+          <Button type="submit" onClick={() => {
+            setIsPushing(true);
+          }}
+          >
+            Enter
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
+  );
+}
+
 function CollapsibleTable() {
-    const [updateMenu, setUpdateMenu] = React.useState(true);
 
-    const [rows, setRows]: any[] = React.useState([]);
-    const [updateRows, setUpdateRows] = React.useState(true);
-    React.useEffect(() => {
-      if(updateRows){
-        manager.getAllTicketData().then(ticketData => setRows(ticketData));
-        setUpdateRows(false);
-      }
-    }, [updateRows]);
 
-    let startMenu: DocumentData[] = [];
+  const [rows, setRows]: any[] = React.useState([]);
+  const [updateRows, setUpdateRows] = React.useState(true);
+  React.useEffect(() => {
+    if (updateRows) {
+      manager.getAllTicketData().then(ticketData => setRows(ticketData));
+      setUpdateRows(false);
+    }
+  }, [updateRows]);
 
-    const [menu, setMenu] = React.useState(startMenu);
+  let startMenu: DocumentData[] = [];
 
-    React.useEffect(() => {
-      if(updateMenu){
-        MenuAndItemsQueries.getAllMenus().then(data => {
+  const [menu, setMenu] = React.useState(startMenu);
+  const [updateMenu, setUpdateMenu] = React.useState(true);
+  React.useEffect(() => {
+    if (updateMenu) {
+      MenuAndItemsQueries.getAllMenus().then(data => {
         entireMenu = data;
         setUpdateMenu(false);
 
         let startMenu: DocumentData[] = [];
 
-        
+
         entireMenu.forEach(item => {
-          if(item.itemName == "App"){
+          if (item.itemName == "App") {
             startMenu.push(item);
           }
         });
         console.log(entireMenu);
         setMenu(startMenu);
       })
-      }
-      
-    }, [updateMenu]);
-
-    const [name, setName] = React.useState('To-Go');
-    const [openOrder, setOpenOrder] = React.useState(false);
-    const handleClickOpenOrder = () => {
-        setOpenOrder(true);
-    };
-    const handleCloseOrder = () => {
-        setOpenOrder(false);
-        setName("");
-    };
-
-    const [Item, setItem] = React.useState('');
-    const [Type, setType] = React.useState('App');
-    const [Quantity, setQuantity] = React.useState(1);
-    const [Status, setStatus] = React.useState('In progress');
-    const [Price, setPrice] = React.useState(0.0);
-    
-    const [openGetItem, setOpenGetItem] = React.useState(false);
-    const handleClickOpenGetItem = () => {
-        setOpenGetItem(true);
-    };
-    const handleCloseGetItem = () => {
-        setOpenGetItem(false);
-        setItem("");
-        setQuantity(1);
-        setPrice(0);
-    };
-
-    const [isPushing, setIsPushing] = React.useState(false);
-
-    const [openItemTable, setOpenItemTable] = React.useState(false);
-    const handleClickOpenItemTable = () => {
-        setOpenItemTable(true);
-    };
-    const handleCloseItemTable = () => {
-        setOpenItemTable(false);
-    };
-
-    const [itemTable, setItemTable]: any[] = React.useState([]);
-    const resetItemTable = () => {
-      setItemTable((itemTable: any) => []);
     }
 
-    const [alignment, setAlignment] = React.useState('App');
-    const handleToggleChange = (
-      event: React.MouseEvent<HTMLElement>,
-      newAlignment: string,
-    ) => {
-      if (newAlignment !== null) {
-        setAlignment(newAlignment);
+  }, [updateMenu]);
+
+  const [name, setName] = React.useState('To-Go');
+  const [openOrder, setOpenOrder] = React.useState(false);
+  const handleClickOpenOrder = () => {
+    setOpenOrder(true);
+  };
+  const handleCloseOrder = () => {
+    setOpenOrder(false);
+    setName("");
+  };
+
+  const [Item, setItem] = React.useState('');
+  const [Type, setType] = React.useState('App');
+  const [Quantity, setQuantity] = React.useState(1);
+  const [Status, setStatus] = React.useState('In progress');
+  const [Price, setPrice] = React.useState(0.0);
+
+  const [openGetItem, setOpenGetItem] = React.useState(false);
+  const handleClickOpenGetItem = () => {
+    setOpenGetItem(true);
+  };
+  const handleCloseGetItem = () => {
+    setOpenGetItem(false);
+    setItem("");
+    setQuantity(1);
+    setPrice(0);
+  };
+
+  const [isPushing, setIsPushing] = React.useState(false);
+
+  const [openItemTable, setOpenItemTable] = React.useState(false);
+  const handleClickOpenItemTable = () => {
+    setOpenItemTable(true);
+  };
+  const handleCloseItemTable = () => {
+    setOpenItemTable(false);
+  };
+
+  const [itemTable, setItemTable]: any[] = React.useState([]);
+  const resetItemTable = () => {
+    setItemTable((itemTable: any) => []);
+  }
+
+  const [alignment, setAlignment] = React.useState('App');
+  const handleToggleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newAlignment: string,
+  ) => {
+    if (newAlignment !== null) {
+      setAlignment(newAlignment);
+    }
+  };
+
+  const theme = useTheme();
+  const [itemName, setItemName] = React.useState<string[]>([]);
+
+  const handleSelectChange = (event: SelectChangeEvent<typeof itemName>) => {
+    const {
+      target: { value },
+    } = event;
+    setItemName(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+
+    let itemPrice = 0;
+    menu.forEach(item => {
+      if (item.itemName == value) {
+        itemPrice = item.itemPrice;
       }
-    };
+    });
 
-    const theme = useTheme();
-    const [itemName, setItemName] = React.useState<string[]>([]);
+    setPrice(itemPrice * Quantity);
+  };
 
-    const handleSelectChange = (event: SelectChangeEvent<typeof itemName>) => {
-      const {
-        target: { value },
-      } = event;
-      setItemName(
-        // On autofill we get a stringified value.
-        typeof value === 'string' ? value.split(',') : value,
-      );
-
-      let itemPrice = 0;
-      menu.forEach(item => {
-        if(item.itemName == value){
-          itemPrice = item.itemPrice;
-        }
+  React.useEffect(() => {
+    if (isPushing) {
+      let ItemId = 0;
+      let newItemTable = [];
+      itemTable.forEach((element: any) => {
+        ItemId++;
+        newItemTable.push(element);
       });
+      newItemTable.push({ itemId: ItemId + 1, item: Item, type: Type, quantity: Quantity, status: Status, price: Price });
 
-      setPrice(itemPrice * Quantity);
-    };
+      setItemTable(newItemTable);
+      setItemName([]);
+      setIsPushing(false);
+    }
 
-    React.useEffect(() => {
-      if(isPushing){
-        let ItemId = 0;
-        let newItemTable = [];
-        itemTable.forEach((element: any) => {
-          ItemId++;
-          newItemTable.push(element);
-        });
-        newItemTable.push({itemId: ItemId + 1, item: Item, type: Type, quantity: Quantity, status: Status, price: Price});
+    let nme = "";
+    itemName.forEach(char => {
+      nme += char;
+    });
+    setItem(nme);
+  }, [isPushing, itemName]);
 
-        setItemTable(newItemTable);
-        setItemName([]);
-        setIsPushing(false);
-      }
+  return (
+    <TableContainer component={Paper} >
+      <Table aria-label="collapsible table">
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell>Order Id</TableCell>
+            <TableCell align="right">Name</TableCell>
+            <TableCell align="right">Time</TableCell>
+            <TableCell align="right">Date&nbsp;</TableCell>
+            <TableCell align="right">Status&nbsp;</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row: any) => (
+            <Row key={row.TicketId} row={row} />
+          ))}
+        </TableBody>
+      </Table>
+      <Stack spacing={2} direction="row-reverse" p={2}>
+        <Button variant="contained" onClick={handleClickOpenOrder}>Create Order</Button>
 
-      let nme = "";
-      itemName.forEach(char => {
-        nme += char;
-      });
-      setItem(nme);
-    }, [isPushing, itemName]);
+        <Dialog
+          open={openOrder}
+          onClose={handleCloseOrder}
+          PaperProps={{
+            component: 'form',
+            onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              const formJson = Object.fromEntries((formData as any).entries());
+              const name = formJson.Name;
+              console.log(name);
+              handleCloseOrder();
+            },
+          }}
+        >
+          <DialogTitle>Create Order</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="name"
+              name="Name"
+              label="Name"
+              type="search"
+              fullWidth
+              variant="standard"
+              value={name}
+              onChange={(event) => { setName(event.target.value) }}
+            />
 
-    return (
-      <TableContainer component={Paper} >
-        <Table aria-label="collapsible table">
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>Order Id</TableCell>
-              <TableCell align="right">Name</TableCell>
-              <TableCell align="right">Time</TableCell>
-              <TableCell align="right">Date&nbsp;</TableCell>
-              <TableCell align="right">Status&nbsp;</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row: any) => (
-              <Row key={row.TicketId} row={row} />
-            ))}
-          </TableBody>
-        </Table>
-        <Stack spacing={2} direction="row-reverse" p={2}>
-          <Button variant="contained" onClick={handleClickOpenOrder}>Create Order</Button>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseOrder}>Cancel</Button>
+            <Button onClick={
+              handleClickOpenItemTable
+            }>
+              Enter
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-          <Dialog
-                open={openOrder}
-                onClose={handleCloseOrder}
-                PaperProps={{
-                    component: 'form',
-                    onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-                        event.preventDefault();
-                        const formData = new FormData(event.currentTarget);
-                        const formJson = Object.fromEntries((formData as any).entries());
-                        const name = formJson.Name;
-                        console.log(name);
-                        handleCloseOrder();
-                    },
-                }}
-            >     
-                <DialogTitle>Create Order</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        required
-                        margin="dense"
-                        id="name"
-                        name="Name"
-                        label="Name"
-                        type="search"
-                        fullWidth
-                        variant="standard"
-                        value={name}
-                        onChange={(event) => {setName(event.target.value)}}
-                    />
-                    
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseOrder}>Cancel</Button>
-                    <Button onClick={
-                      handleClickOpenItemTable
-                      }>
-                        Enter
-                      </Button>
-                    </DialogActions>
-            </Dialog>
+        <Dialog
+          open={openItemTable}
+          onClose={handleCloseItemTable}
+          PaperProps={{
+            component: 'form',
+            onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              const formJson = Object.fromEntries((formData as any).entries());
+              const name = formJson.Name;
+              console.log(name);
+              handleCloseItemTable();
+            },
+          }}
+        >
+          <DialogTitle>Item Table</DialogTitle>
+          <DialogContent>
 
-            <Dialog
-                open={openItemTable}
-                onClose={handleCloseItemTable}
-                PaperProps={{
-                    component: 'form',
-                    onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-                        event.preventDefault();
-                        const formData = new FormData(event.currentTarget);
-                        const formJson = Object.fromEntries((formData as any).entries());
-                        const name = formJson.Name;
-                        console.log(name);
-                        handleCloseItemTable();
-                    },
-                }}
-            >     
-                <DialogTitle>Item Table</DialogTitle>
-                <DialogContent>
-                    
-                <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
-                  Order
-                </Typography>
-                <Table size="small" aria-label="purchases">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Id</TableCell>
-                      <TableCell>Item</TableCell>
-                      <TableCell align="right">Type</TableCell>
-                      <TableCell align="right">Quantity</TableCell>
-                      <TableCell align="right">Status</TableCell>
-                      <TableCell align="right">Price ($)</TableCell>
-                      <TableCell align="right"></TableCell>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                Order
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Id</TableCell>
+                    <TableCell>Item</TableCell>
+                    <TableCell align="right">Type</TableCell>
+                    <TableCell align="right">Quantity</TableCell>
+                    <TableCell align="right">Status</TableCell>
+                    <TableCell align="right">Price ($)</TableCell>
+                    <TableCell align="right"></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {itemTable.map((item: { itemId: number, item: String, type: String, quantity: number, status: String, price: number }) => (
+                    <TableRow key={item.itemId}>
+                      <TableCell component="th" scope="row">
+                        {item.itemId}
+                      </TableCell>
+                      <TableCell>{item.item}</TableCell>
+                      <TableCell align="right">{item.type}</TableCell>
+                      <TableCell align="right">{item.quantity}</TableCell>
+                      <TableCell align="right">{item.status}</TableCell>
+                      <TableCell align="right">{item.price}</TableCell>
+                      <Stack p={1}>
+                        <Button variant="contained" onClick={() => {
+                          let table: any[] = [];
+                          let offset = 0;
+                          itemTable.forEach((element: any) => {
+                            if (element.itemId != item.itemId) {
+                              element.itemId -= offset;
+                              table.push(element);
+                            }
+                            else {
+                              offset += 1;
+                            }
+                          });
+                          setItemTable(table);
+                        }}>
+                          Remove
+                        </Button>
+                      </Stack>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {itemTable.map((item:{itemId: number, item: String, type: String, quantity: number, status: String, price: number}) => (
-                      <TableRow key={item.itemId}>
-                        <TableCell component="th" scope="row">
-                          {item.itemId}
-                        </TableCell>
-                        <TableCell>{item.item}</TableCell>
-                        <TableCell align="right">{item.type}</TableCell>
-                        <TableCell align="right">{item.quantity}</TableCell>
-                        <TableCell align="right">{item.status}</TableCell>
-                        <TableCell align="right">{item.price}</TableCell>
-                        <Stack p={1}>
-                          <Button variant="contained" onClick={() => {
-                            let table: any[] = [];
-                            let offset = 0;
-                            itemTable.forEach((element: any) => {
-                              if(element.itemId != item.itemId){
-                                element.itemId -= offset;
-                                table.push(element);
-                              }
-                              else{
-                                offset += 1;
-                              }
-                            });
-                            setItemTable(table);
-                          }}>
-                            Remove
-                          </Button>
-                        </Stack>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                <Stack spacing={2} p={2}>
-                  <Button variant="contained" onClick={handleClickOpenGetItem}>Add Item</Button>
-                </Stack>
-              </Box>
-                    
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => {setOpenItemTable(false); setItemTable((itemTable: any) => []);}}>Back</Button>
-                    <Button type="submit" onClick={() => {
+                  ))}
+                </TableBody>
+              </Table>
+              <Stack spacing={2} p={2}>
+                <Button variant="contained" onClick={handleClickOpenGetItem}>Add Item</Button>
+              </Stack>
+            </Box>
 
-                      let itemArray: {itemName: string, price: number}[] = [];
-                      console.log(itemTable);
-                      itemTable.forEach((item: any) => {
-                        for(let i = 0; i < item.quantity; i++){
-                          itemArray.push({itemName: item.item, price: item.price});
-                        }
-                      });
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => { setOpenItemTable(false); setItemTable((itemTable: any) => []); }}>Back</Button>
+            <Button type="submit" onClick={() => {
 
-                      manager.addTicket(name, "Open", itemArray);
-                      setTimeout(() => {manager.getAllTicketData().then(ticketData => setRows(ticketData))}, 1000);
-                      
-                      handleCloseItemTable();
-                      setOpenOrder(false);
-                      setName("");
-                      resetItemTable();
-                      }}>
-                        Enter
-                      </Button>
-                    </DialogActions>
-            </Dialog>
+              let itemArray: { itemName: string, price: number }[] = [];
+              console.log(itemTable);
+              itemTable.forEach((item: any) => {
+                for (let i = 0; i < item.quantity; i++) {
+                  itemArray.push({ itemName: item.item, price: item.price });
+                }
+              });
+
+              manager.addTicket(name, "Open", itemArray);
+              setTimeout(() => { manager.getAllTicketData().then(ticketData => setRows(ticketData)) }, 1000);
+
+              handleCloseItemTable();
+              setOpenOrder(false);
+              setName("");
+              resetItemTable();
+            }}>
+              Enter
+            </Button>
+          </DialogActions>
+        </Dialog>
 
 
-            <Dialog
-                open={openGetItem}
-                onClose={handleCloseGetItem}
-                PaperProps={{
-                    component: 'form',
-                    onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-                        event.preventDefault();
-                        const formData = new FormData(event.currentTarget);
-                        const formJson = Object.fromEntries((formData as any).entries());
-                        const name = formJson.Name;
-                        console.log(name);
-                        handleCloseGetItem();
-                    },
-                }}
-            >     
-                <DialogTitle>Add item</DialogTitle>
-                <DialogContent>
-                <Stack spacing={1}>
-                <ToggleButtonGroup
-                  color="primary"
-                  value={alignment}
-                  exclusive
-                  onChange={handleToggleChange}
-                  aria-label="Platform"
-                >
-                  <ToggleButton value="App" onClick = {() => {
-                    setType("App");
-                    let appMenu: DocumentData[] = []
-                    entireMenu.forEach(item => {
-                      if(item.itemCategory == "App"){
-                        appMenu.push(item);
-                      }
-                    });
-                    setMenu(appMenu);
-                  }}>
-                    Appetizer
-                  </ToggleButton>
-                  <ToggleButton value="Entree" onClick = {() => {
-                    setType("Entree");
-                    let entreeMenu: DocumentData[] = []
-                    entireMenu.forEach(item => {
-                      if(item.itemCategory == "Entree"){
-                        entreeMenu.push(item);
-                      }
-                    });
-                    setMenu(entreeMenu);
-                  }}>
-                    Entree
-                  </ToggleButton>
-                  <ToggleButton value="Dessert" onClick = {() => {
-                    setType("Dessert");
-                    let dessMenu: DocumentData[] = []
-                    entireMenu.forEach(item => {
-                      if(item.itemCategory == "Dessert"){
-                        dessMenu.push(item);
-                      }
-                    });
-                    setMenu(dessMenu);
-                  }}>
-                    Dessert
-                  </ToggleButton>
-                  <ToggleButton value="Bev" onClick = {() => {
-                    setType("Bev");
-                    let bevMenu: DocumentData[] = []
-                    entireMenu.forEach(item => {
-                      if(item.itemCategory == "Bev"){
-                        bevMenu.push(item);
-                      }
-                    });
-                    setMenu(bevMenu);
-                  }}>
-                    Beverage
-                  </ToggleButton>
-                </ToggleButtonGroup>
+        <Dialog
+          open={openGetItem}
+          onClose={handleCloseGetItem}
+          PaperProps={{
+            component: 'form',
+            onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+              event.preventDefault();
+              const formData = new FormData(event.currentTarget);
+              const formJson = Object.fromEntries((formData as any).entries());
+              const name = formJson.Name;
+              console.log(name);
+              handleCloseGetItem();
+            },
+          }}
+        >
+          <DialogTitle>Add item</DialogTitle>
+          <DialogContent>
+            <Stack spacing={1}>
+              <ToggleButtonGroup
+                color="primary"
+                value={alignment}
+                exclusive
+                onChange={handleToggleChange}
+                aria-label="Platform"
+              >
+                <ToggleButton value="App" onClick={() => {
+                  setType("App");
+                  let appMenu: DocumentData[] = []
+                  entireMenu.forEach(item => {
+                    if (item.itemCategory == "App") {
+                      appMenu.push(item);
+                    }
+                  });
+                  setMenu(appMenu);
+                }}>
+                  Appetizer
+                </ToggleButton>
+                <ToggleButton value="Entree" onClick={() => {
+                  setType("Entree");
+                  let entreeMenu: DocumentData[] = []
+                  entireMenu.forEach(item => {
+                    if (item.itemCategory == "Entree") {
+                      entreeMenu.push(item);
+                    }
+                  });
+                  setMenu(entreeMenu);
+                }}>
+                  Entree
+                </ToggleButton>
+                <ToggleButton value="Dessert" onClick={() => {
+                  setType("Dessert");
+                  let dessMenu: DocumentData[] = []
+                  entireMenu.forEach(item => {
+                    if (item.itemCategory == "Dessert") {
+                      dessMenu.push(item);
+                    }
+                  });
+                  setMenu(dessMenu);
+                }}>
+                  Dessert
+                </ToggleButton>
+                <ToggleButton value="Bev" onClick={() => {
+                  setType("Bev");
+                  let bevMenu: DocumentData[] = []
+                  entireMenu.forEach(item => {
+                    if (item.itemCategory == "Bev") {
+                      bevMenu.push(item);
+                    }
+                  });
+                  setMenu(bevMenu);
+                }}>
+                  Beverage
+                </ToggleButton>
+              </ToggleButtonGroup>
 
-                <Select
-                  labelId="item-select"
-                  id="item-select"
-                  value={itemName}
-                  onChange={handleSelectChange}
-                  input={<OutlinedInput label="Name" />}
-                  MenuProps={MenuProps}
-                >
-                  {menu.map((item) => (
+              <Select
+                labelId="item-select"
+                id="item-select"
+                value={itemName}
+                onChange={handleSelectChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+              >
+                {menu.map((item) => (
                   <MenuItem
                     key={item.itemName}
                     value={item.itemName}
                     style={getStyles(item.itemName, itemName, theme)}
                   >
                     {item.itemName}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  </MenuItem>
+                ))}
+              </Select>
 
-                  <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="quantity"
-                    name="quantity"
-                    label="quantity"
-                    type="number"
-                    fullWidth
-                    variant="standard"
-                    value={Quantity}
-                    onChange={(event) => {
-                      setQuantity(Number(event.target.value));
-                      let itemPrice = 0;
-                      menu.forEach(item => {
-                        if(item.itemName == itemName[0]){
-                          itemPrice = item.itemPrice;
-                        }
-                      });
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                id="quantity"
+                name="quantity"
+                label="quantity"
+                type="number"
+                fullWidth
+                variant="standard"
+                value={Quantity}
+                onChange={(event) => {
+                  setQuantity(Number(event.target.value));
+                  let itemPrice = 0;
+                  menu.forEach(item => {
+                    if (item.itemName == itemName[0]) {
+                      itemPrice = item.itemPrice;
+                    }
+                  });
 
-                      setPrice(itemPrice*Number(event.target.value));
-                    }}
-                  />
-                  <TextField
-                    autoFocus
-                    disabled
-                    margin="dense"
-                    id="price"
-                    name="price"
-                    label="price"
-                    type="number"
-                    fullWidth
-                    variant="standard"
-                    value={Price}
-                    onChange={(event) => {setPrice(Number(event.target.value))}}
-                  />
-                </Stack>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseGetItem}>Cancel</Button>
-                    <Button type="submit" onClick={() => {
-                      setIsPushing(true);
-                      }}
-                    >
-                        Enter
-                      </Button>
-                    </DialogActions>
-            </Dialog>
-            
-        </Stack>
-      </TableContainer>
-      
-    );
-  }
+                  setPrice(itemPrice * Number(event.target.value));
+                }}
+              />
+              <TextField
+                autoFocus
+                disabled
+                margin="dense"
+                id="price"
+                name="price"
+                label="price"
+                type="number"
+                fullWidth
+                variant="standard"
+                value={Price}
+                onChange={(event) => { setPrice(Number(event.target.value)) }}
+              />
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseGetItem}>Cancel</Button>
+            <Button type="submit" onClick={() => {
+              setIsPushing(true);
+            }}
+            >
+              Enter
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+      </Stack>
+    </TableContainer>
+
+  );
+}
 
 function ToGo() {
-    return (
-        <Container maxWidth={false}>
-            {CollapsibleTable()}
-        </Container>
-    )
+  return (
+    <Container maxWidth={false}>
+      {CollapsibleTable()}
+    </Container>
+  )
 }
 
 export default ToGo;
