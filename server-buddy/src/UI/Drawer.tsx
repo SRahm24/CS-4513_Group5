@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ThemeProvider, createTheme, styled} from '@mui/material/styles';
+import { ThemeProvider, createTheme, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -23,6 +23,9 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Container from '@mui/material/Container';
 import ToGo from './ToGo';
+import DataTable from './Kitchen';
+import ManagerMenuTable from './Manager';
+import { Card, CardActionArea, CardContent, CardMedia, Stack } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -124,7 +127,7 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(3);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -133,78 +136,120 @@ export default function PersistentDrawerLeft() {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Server Buddy
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
+        <CssBaseline />
+        <AppBar position="fixed" open={open}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{ mr: 2, ...(open && { display: 'none' }) }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+              Server Buddy
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          sx={{
             width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {['Kitchen', 'Server', 'Manager'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['Menu', 'Transactions', 'Inventory'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <Main open={open}>
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+            },
+          }}
+          variant="persistent"
+          anchor="left"
+          open={open}
+        >
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            {['Server', 'Kitchen', 'Manager'].map((text, index) => (
+              <ListItem key={text} disablePadding>
+                <ListItemButton onClick={() => { setValue(index) }}>
+                  <ListItemIcon>
+                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+        </Drawer>
+        <Main open={open}>
 
-          <CssBaseline />
-          <Container maxWidth={false}>
-            <ToGo/>
-          </Container>
-
-        
-      </Main>
-    </Box>
+          <Box sx={{ width: '100%' }}>
+            <CustomTabPanel value={value} index={0}>
+              <ToGo />
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
+              <DataTable />
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={2}>
+              <ManagerMenuTable />
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={3}>
+              <Stack spacing={2} direction="row" p={2}>
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardActionArea onClick={() => { setValue(0) }}>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image=".\pictures\ServerButtonPicture.jpg"
+                      alt="green iguana"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        Server
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardActionArea onClick={() => { setValue(1) }}>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image=".\pictures\KitchenPicture.jpg"
+                      alt="green iguana"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        Kitchen
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardActionArea onClick={() => { setValue(2) }}>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image=".\pictures\ManagerButtonPicture.jpg"
+                      alt="green iguana"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        Manager
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Stack>
+            </CustomTabPanel>
+          </Box>
+        </Main>
+      </Box>
     </ThemeProvider>
   );
 }

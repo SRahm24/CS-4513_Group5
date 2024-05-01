@@ -34,7 +34,7 @@ export class updateDB {
      * @param item: Item object
      */
     static async deleteItem(item: Item) {
-        const itemRef = collection(db, "MenuItems");
+        const itemRef = collection(db, "Menu");
         const itemDoc = doc(itemRef, item.getItemId());
         await deleteDoc(itemDoc);
     }
