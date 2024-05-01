@@ -106,7 +106,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                     alert('Order status not updated');
                   }
                 }}>
-                {row.orderStatus == "In Progress" ? "UPDATE" : "SEND"}
+                {row.orderStatus == "In Progress" ? "READY" : "SEND"}
               </Button>
             </Stack>
           </Box>
