@@ -115,13 +115,12 @@ export class TicketManager{
                 _itemId++;
 
                 entireMenu.forEach(menuItem => {
-                    if(item.item == menuItem.name){
-                        item.price = menuItem.price * item.quantity;
+                    if(item.item == menuItem.itemName){
+                        item.price = menuItem.itemPrice * item.quantity;
                         item.type = menuItem.type;
                     }
                 });
             });
-            console.log(currentOrder);
 
             allTicketData.push({TicketId: tickId, Name: tickName, Time: ticketTime, Date: ticketDate, Status: tickStatus, order: currentOrder});
         });

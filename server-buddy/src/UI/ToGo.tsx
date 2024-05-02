@@ -90,6 +90,7 @@ function createData(
 function Row(props: { row: ReturnType<typeof createData> }) {
   const { row } = props;
   const [orders, setOrders]: any[] = React.useState(row.order);
+  console.log(row.order)
   const [open, setOpen] = React.useState(false);
 
   const [itemTable, setItemTable]: any[] = React.useState([]);
@@ -115,7 +116,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   const [Item, setItem] = React.useState('');
   const [Type, setType] = React.useState('App');
   const [Quantity, setQuantity] = React.useState(1);
-  const [Status, setStatus] = React.useState('In progress');
+  const [Status, setStatus] = React.useState('In Progress');
   const [Price, setPrice] = React.useState(0.0);
 
   const [openGetItem, setOpenGetItem] = React.useState(false);
@@ -155,8 +156,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
 
     let itemPrice = 0;
     menu.forEach(item => {
-      if (item.name == value) {
-        itemPrice = item.price;
+      if (item.itemName == value) {
+        itemPrice = item.itemPrice;
       }
     });
 
@@ -340,7 +341,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
               }
             });
 
-            manager.addOrder(row.TicketId, "", -1, "", "In progress", itemArray);
+            manager.addOrder(row.TicketId, "", -1, "", "In Progress", itemArray);
 
             handleCloseItemTable();
 
@@ -547,7 +548,7 @@ function CollapsibleTable() {
   const [Item, setItem] = React.useState('');
   const [Type, setType] = React.useState('App');
   const [Quantity, setQuantity] = React.useState(1);
-  const [Status, setStatus] = React.useState('In progress');
+  const [Status, setStatus] = React.useState('In Progress');
   const [Price, setPrice] = React.useState(0.0);
 
   const [openGetItem, setOpenGetItem] = React.useState(false);
@@ -772,7 +773,6 @@ function CollapsibleTable() {
             <Button type="submit" onClick={() => {
 
               let itemArray: { itemName: string, price: number }[] = [];
-              console.log(itemTable);
               itemTable.forEach((item: any) => {
                 for (let i = 0; i < item.quantity; i++) {
                   itemArray.push({ itemName: item.item, price: item.price });

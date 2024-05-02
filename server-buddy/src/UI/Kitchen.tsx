@@ -95,10 +95,12 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 onClick={async () => {
                   const bool = confirm('Are you sure you want to update this order?');
                   if (bool && row.orderStatus == "In Progress") {
+                    console.log("Ready button clicked");
                     newOrder.setOrderStatus("Ready");
                     updateDB.updateOrderStatus(newOrder);
                   }
                   else if (bool && row.orderStatus == "Ready") {
+                    console.log("Send button clicked");
                     newOrder.setOrderStatus("Sent");
                     updateDB.updateOrderStatus(newOrder);
                   }
